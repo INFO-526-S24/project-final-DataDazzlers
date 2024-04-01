@@ -4,12 +4,16 @@ format: html
 editor: visual
 ---
 
-This project was developed by **\[Team Name\]** For [INFO 526 - Data Analysis & Visualization](https://datavizaz.org/) at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.
+This project was developed by **Data Dazzlers**. For [INFO 526 - Data Analysis & Visualization](https://datavizaz.org/) at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.
 
--   Team member 1: One sentence description of Team member 1 (e.g., year, major, etc.).
+-   Naitik Shah : 1st year Grad student Pursuing Information Science - Human Centered Computing.
 
--   Team member 2: One sentence description of Team member 2 (e.g., year, major, etc.).
+-   Varun Soni : One sentence description of Team member 2 (e.g., year, major, etc.).
 
--   Team member 3: One sentence description of Team member 3 (e.g., year, major, etc.).
+-   Vidhyananth Sivashanmugam : One sentence description of Team member 3 (e.g., year, major, etc.).
 
--   Team member 4: One sentence description of Team member 4 (e.g., year, major, etc.).
+-   Mohammad Ali Farmani : One sentence description of Team member 4 (e.g., year, major, etc.).
+
+-   Sanja Dmitrovic : One sentence description of Team member 5 (e.g., year, major, etc.).
+
+-   Jiayue He : One sentence description of Team member 6 (e.g., year, major, etc.).

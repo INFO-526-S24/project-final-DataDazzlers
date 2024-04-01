@@ -2,7 +2,7 @@
 title: "Project Title"
 subtitle: "INFO 526 - Project Final"
 author: 
-  - name: "Team name - Team member 1, Team member 2,..."
+  - name: "Data Dazzlers"
     affiliations:
       - name: "School of Information, University of Arizona"
 description: "Project description"
