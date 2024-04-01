@@ -36,9 +36,9 @@ child_cost|>glimpse()
 
 ## Description of the Dataset:
 
-The dataset “crash_data” that will be used for this project has been sourced from the official website of the Massachusetts Registry of Motor Vehicles. This dataset was chosen due to the relevance it holds in today’s day and age that is witness to an unfortunate increase in road accidents since the past 30 years. Analysing this data can help find patterns to create an algorithm or model that can predict crashes which could extensively assist in preventing accidents and possible deaths. By working on this data, we can contribute with identification of place/time of possible accidents that could aid in ensuring safer travel experiences for the public.
+The dataset "NYC_Motor_Vehicle_Collisions_to_Person," sourced from the official website of the Massachusetts Registry of Motor Vehicles, will be utilized for this project. This dataset was selected for its relevance in the context of a worrying increase in road accidents over the past 30 years. Analyzing this data could reveal patterns that would enable the creation of algorithms or models capable of predicting crashes. Such predictive tools could significantly aid in preventing accidents and potential fatalities. By examining this data, we aim to contribute by identifying the places and times where accidents are likely to occur, thereby enhancing public safety and ensuring safer travel experiences.
 
-The dataset consists of 72 dimensions, some of which are - Crash Number, City Town/Name, Crash Date, Crash Severity, Crash Time, Crash Year, Max Injury Severity Reported, Age of Driver - Youngest Known, Age of Driver - Oldest Known etc.
+The dataset comprises 72 dimensions, including Crash Number, City/Town Name, Crash Date, Crash Severity, Crash Time, Crash Year, Maximum Injury Severity Reported, Age of the Youngest Known Driver, and Age of the Oldest Known Driver, among others.
 
 
 ## Questions
