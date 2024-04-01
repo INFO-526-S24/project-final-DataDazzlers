@@ -30,8 +30,8 @@ library(tidyverse)
 #| label: load-dataset
 #| message: false
 library(here)
-# child_cost <- read.csv(here('Data','childcare_costs.csv'))
-# child_cost|>glimpse()
+child_cost <- read.csv(here('Data','NYC_Motor_Vehicle_Collisions_to_Person.csv'))
+child_cost|>glimpse()
 ```
 
 ## Description of the Dataset:
