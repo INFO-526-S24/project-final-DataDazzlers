@@ -8,7 +8,7 @@ This project was developed by **Data Dazzlers**. For [INFO 526 - Data Analysis &
 
 -   Naitik Shah : 1st year Grad student Pursuing Information Science - Human Centered Computing.
 
--   Varun Soni : One sentence description of Team member 2 (e.g., year, major, etc.).
+-   Varun Soni : Final Year Grad stduent pursuing Information Scinece with emphasis on Machine Learning.
 
 -   Vidhyananth Sivashanmugam : One sentence description of Team member 3 (e.g., year, major, etc.).
 
