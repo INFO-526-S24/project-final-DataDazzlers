@@ -14,6 +14,6 @@ This project was developed by **Data Dazzlers**. For [INFO 526 - Data Analysis &
 
 -   Mohammad Ali Farmani : 2nd year PhD student in Hydrology and Atmospheric Sciences in University of Arizona.
 
--   Sanja Dmitrovic : One sentence description of Team member 5 (e.g., year, major, etc.).
+-   Sanja Dmitrovic : Ph.D. in Optical Sciences at the University of Arizona. Next role will be remote sensing software engineer at NASA Goddard Space Flight Center.
 
 -   Jiayue He : One sentence description of Team member 6 (e.g., year, major, etc.).
