@@ -32,7 +32,6 @@ library(tidyverse)
 library(here)
 crash <- read.csv(here('data','NYC_Motor_Vehicle_Collisions_to_Person.csv'))
 crash|>glimpse()
-crash
 ```
 
 ## Description of the Dataset:
