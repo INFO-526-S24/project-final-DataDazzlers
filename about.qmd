@@ -12,7 +12,7 @@ This project was developed by **Data Dazzlers**. For [INFO 526 - Data Analysis &
 
 -   Vidhyananth Sivashanmugam : One sentence description of Team member 3 (e.g., year, major, etc.).
 
--   Mohammad Ali Farmani : One sentence description of Team member 4 (e.g., year, major, etc.).
+-   Mohammad Ali Farmani : 2nd year PhD student in Hydrology and Atmospheric Sciences in University of Arizona.
 
 -   Sanja Dmitrovic : One sentence description of Team member 5 (e.g., year, major, etc.).
 
