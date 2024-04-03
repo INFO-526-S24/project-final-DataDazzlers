@@ -35,16 +35,10 @@ This Data-set is taken form the [GIS Data from the City of Tucson](https://gisda
 Below we have the names of the colummns.
 ```{r, message=FALSE, warning=FALSE}
 #| label: load-dataset
-#| message: false
-<<<<<<< Updated upstream
-library(here)
-crash <- read.csv(here('data','NYC_Motor_Vehicle_Collisions_to_Person.csv'))
-crash|>glimpse()
-=======
 
 crash <- read.csv("data/tucson_data.csv")
 names(crash) 
->>>>>>> Stashed changes
+
 ```
 
 ## **Why this dataset?**
