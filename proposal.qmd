@@ -1,11 +1,11 @@
 ---
-title: "Accidents Crash Analysis"
+title: "Tucson Car Collision Analysis"
 subtitle: "Proposal"
 author: 
-  - name: " Team Data Dazzlers"
+  - name: "Data Dazzlers"
     affiliations:
       - name: "School of Information, University of Arizona"
-description: "Accidents Crash Analysis"
+description: "Tucson Car Collision Analysis"
 format:
   html:
     code-tools: true
@@ -18,62 +18,132 @@ execute:
   warning: false
 ---
 
-```{r}
+```{r,warning=FALSE,message=FALSE}
 #| label: load-pkgs
 #| message: false
 library(tidyverse)
 ```
 
-## Dataset
+## **Introduction**
 
-```{r}
+In response to the critical issue of road safety in Tucson, we propose a project that utilizes the comprehensive accident crash data-set provided by the Tucson Police Department. Our aim is to develop an interactive spatio-temporal visualization to highlight patterns, trends, and hot-spots of traffic accidents in the city. This initiative seeks to leverage data for societal benefit, offering insights that can contribute to improved safety measures and awareness within the Tucson community..
+
+## **Dataset**
+
+This Data-set is taken form the [GIS Data from the City of Tucson](https://gisdata.tucsonaz.gov/datasets/tucson-police-collisions/explore "Dataset link").
+
+Below we have the names of the colummns.
+```{r, message=FALSE, warning=FALSE}
 #| label: load-dataset
 #| message: false
+<<<<<<< Updated upstream
 library(here)
 crash <- read.csv(here('data','NYC_Motor_Vehicle_Collisions_to_Person.csv'))
 crash|>glimpse()
+=======
+
+crash <- read.csv("data/tucson_data.csv")
+names(crash) 
+>>>>>>> Stashed changes
 ```
 
-## Description of the Dataset:
+## **Why this dataset?**
 
-The dataset "NYC_Motor_Vehicle_Collisions_to_Person," sourced from the official website of the Massachusetts Registry of Motor Vehicles, will be utilized for this project. This dataset was selected for its relevance in the context of a worrying increase in road accidents over the past 30 years. Analyzing this data could reveal patterns that would enable the creation of algorithms or models capable of predicting crashes. Such predictive tools could significantly aid in preventing accidents and potential fatalities. By examining this data, we aim to contribute by identifying the places and times where accidents are likely to occur, thereby enhancing public safety and ensuring safer travel experiences.
+Choosing the Tucson accident crash data-set for project is a decision rooted in both relevance and practicality. As students at the University of Arizona, located in the heart of Tucson, this data-set offers a unique opportunity to study a subject that directly impacts the community. Analyzing traffic collision data within the city not only allows us to apply the theoretical knowledge we've gained in our data analysis courses but also provides insights into urban safety and transportation issues that affect peers and fellow residents. This project is not just an academic exercise; it's a chance to contribute to a safer, more informed Tucson.
 
-The dataset comprises 72 dimensions, including Crash Number, City/Town Name, Crash Date, Crash Severity, Crash Time, Crash Year, Maximum Injury Severity Reported, Age of the Youngest Known Driver, and Age of the Oldest Known Driver, among others.
+## **Analysis Goal**
 
-## Questions
+The primary objective of our project is to delve deep into the Tucson accident crash dataset to uncover underlying patterns and factors contributing to road accidents within Tucson, where the University of Arizona is located. By leveraging the extensive data provided by the Tucson Police Department, we aim to analyze various dimensions such as the time, location, and nature of accidents, in addition to identifying high-risk areas and times for collisions. Furthermore, our analysis seeks to explore the impact of environmental and temporal variables—like weather conditions and time of day—on the frequency and severity of accidents.
 
-The two questions you want to answer.
+In doing so, we intend to not only highlight critical safety concerns but also to propose data-driven recommendations for enhancing road safety measures in Tucson. Through advanced data visualization techniques and statistical analysis, we plan to make our findings accessible to a broad audience, including local authorities, the university community, and the general public. Ultimately, our goal is to contribute to the ongoing efforts to reduce traffic-related injuries and fatalities, promoting a safer environment for the residents and visitors of Tucson.
 
-## Analysis plan
+## **Objective**
 
--   A plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any).
+Our project's primary goal is to develop a dynamic and user-friendly tool that offers detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. By enabling various stakeholders, including city planners, policy-makers, local residents, and fellow students, to access and interact with our findings, we aspire to contribute to informed decision-making processes and the implementation of effective road safety measures.
 
-**Question 1: What age group has been involved in the accidents and at what time the accidents were at peak?** 
+## **Project Plan**
 
-**Approach**
+1.  Data Preparation and Analysis :
+    -   Begin with a thorough cleaning and preprocessing of the Tucson accident crash dataset to ensure accuracy and usability.
+    -   Conduct a comprehensive analysis focusing on temporal trends (time of day, day of the week, months), spatial distribution (accident hotspots), and accident severity (fatalities, injuries).
+2.  Development of Interactive Visualizations :
+    -   Utilize R Shiny for the creation of an interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
+    -   Implement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson.
+    -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
+3.  Accessibility and User Experience :
+    -   Design the dashboard with a focus on accessibility, ensuring that our visualizations are informative and usable for all.
+    -   Incorporate user-friendly features, such as slicer to highlight key insights and facilitate understanding.
+4.  Outreach and Impact :
+    -   Plan to present our findings to local authorities and community groups to foster discussions on improving road safety.
+    -   Publish our interactive dashboard online, making it accessible to the public for educational and awareness purposes.
 
-**Plots:**
+## **Team Roles**
 
-1\) plot 1:
+Our team will leverage its diverse skill sets to ensure the success of the project, with members taking on roles that include data analysis, visualization design, dashboard development, and project management. Regular meetings will be scheduled to review progress, address challenges, and ensure that the project remains on track to meet its objectives.
 
-2\) plot 2:
+## **Expected Outcomes**
 
-\
-The second plot can rely on a time series or line plot for accidents over time of day. Therefore, through aggregating the number of accidents by hour, the plot can visualize the trend of accidents throughout a day. It is also suitable for using Shiny app which allow users to interact with the plot. There can be a time series bar, when the user drag the button, the plot can show different numbers of accidents in different hours in a day. Also, this plot can help identify peak times for accidents. \
+We anticipate that our project will not only enhance our understanding and application of data analysis techniques but also provide valuable insights into traffic accident trends in Tucson. By highlighting areas and times of high risk, our work aims to support efforts to reduce accidents and improve road safety for all city residents.
 
-**Variables to be used and created:**
+## **Conclusion**
 
-The main variables will be used to answer this question are: 
+With a deep commitment to applying our analytical skills for the betterment of our community, we believe that this project represents a meaningful opportunity to make a tangible difference in the area of road safety in Tucson. We are excited about the potential of our interactive spatio-temporal visualization tool to illuminate insights that can lead to positive changes in our community.
 
-1.  **Age**: which will help to categorize individuals into different groups to see which age group is more involved in accidents
 
-2.  **Crash Time:** which will help to determine the times when accidents are most frequent. 
+## Timeline
 
-The variables will be created have not yet be determined, but some variables can be considered are: 
+```{r}
+#| label: timeline-table
+#| echo: false
+#| message: false
 
-1.  **Age Group:** which can categorize individuals into specific age groups, such as 0-18 (youths), 19-35 (young adults), 36- 50 (middle-aged adults), 51-65 (pre-seniors) and 65+ (seniors). There are columns with age groups, but the age can be regrouped so they can be grouped with different categories which allow for a clearer analysis of which age groups seem to be involved in accidents
+library(kableExtra)
+# Create vectors to represent the tasks
+tasks <- c("Proposal-For Peer Review",
+           "Peer Review",
+           "Proposal-Updated",
+           "Proposal-Final")
 
-2.  **Day Part**: instead of looking at the specific time,  it is helpful to divide day into different parts like Morning (5am-12:00am), Afternoon (12:01pm - 5:00pm), Evening (5:01pm - 9:00 pm), and Night (9:01 pm - 4:59am). In such a way, not only peak hours but also period of time can used to see when more accidents happen. 
+# Create vector to represent status
+status <- c("",
+            "",
+            "",
+            "")
 
-\
-\
+# Create vector to represent ownership
+member <- c("All",
+            "All",
+            "All",
+            "All")
+
+# Create vector to represent the deadline
+due <- c("April 1",
+         "April 1",
+         "April 8",
+         "April 15")
+
+# Create vector to represent priority
+priority <- c("High",
+              "Medium",
+              "Medium",
+              "High")
+
+# Create vector to represent description
+description <- c("Write proposal for peer review",
+                 "Write up peer reviews for other groups",
+                 "Update proposal using peer feedback",
+                 "Update proposal using instructor feedback")
+
+# Bind the columns
+table_2 <- as.table(cbind(tasks, status, member, due, priority, description))
+colnames(table_2) <- c("Task Name", "Status", "Assignee",
+                       "Due", "Priority", "Summary")
+row.names(table_2) <- seq(1:nrow(table_2))
+
+# Generate a nice table with kable
+timeline_table <- kable(table_2, "html") %>%
+  kable_styling(full_width = FALSE)
+
+# Display the table
+timeline_table
+```

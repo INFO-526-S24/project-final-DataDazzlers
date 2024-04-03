@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: Accidents Crash Analysis
+  title: Tucson Car Collision Analysis
   navbar:
     right:
       - icon: github
@@ -19,6 +19,7 @@ website:
 
 format:
   html:
+    code-fold: true
     theme:
       light: flatly
       dark: darkly

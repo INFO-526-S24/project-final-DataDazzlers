@@ -1,0 +1,191 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This project was developed by Data Dazzlers. For INFO 526 - Data Analysis & Visualization at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.\n\nNaitik Shah : 1st year Grad student pursuing Information Science - Human Centered Computing.\nVarun Soni : Final Year Grad student pursuing Information Science with emphasis on Machine Learning.\nVidhyananth Sivashanmugam : 2nd year Grad student pursuing Data Science.\nMohammad Ali Farmani : 2nd year PhD student in Hydrology and Atmospheric Sciences at University of Arizona.\nSanja Dmitrovic : Ph.D. in Optical Sciences at the University of Arizona. Next role will be remote sensing software engineer at NASA Goddard Space Flight Center.\nJiayue He : 2nd year Grad student Pursuing Information Science - Human Centered Computing."
+  },
+  {
+    "objectID": "proposal.html",
+    "href": "proposal.html",
+    "title": "Tucson Car Collision Analysis",
+    "section": "",
+    "text": "Code\nlibrary(tidyverse)"
+  },
+  {
+    "objectID": "proposal.html#dataset",
+    "href": "proposal.html#dataset",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Dataset",
+    "text": "Dataset\nThis Data-set is taken form the GIS Data from the City of Tucson.\nBelow we have the names of the colummns.\n\n\nCode\ncrash &lt;- read.csv(\"data/tucson_data.csv\")\nnames(crash) \n\n\n [1] \"AccidentID\"                    \"Dupe\"                         \n [3] \"Agency\"                        \"CollisionDate\"                \n [5] \"YearOccu\"                      \"Month\"                        \n [7] \"MonthOccu\"                     \"MonthAbbr\"                    \n [9] \"TimeOccu\"                      \"Day\"                          \n[11] \"YeartoDate\"                    \"YtdDupl\"                      \n[13] \"TrafficOffense\"                \"OffenseDesc\"                  \n[15] \"InjurySeverity\"                \"CollisionType\"                \n[17] \"CollisionManner\"               \"Division\"                     \n[19] \"Squad\"                         \"Ward\"                         \n[21] \"CollisionNeighborhd\"           \"AccidentLocation\"             \n[23] \"CollisionDirection\"            \"Distance\"                     \n[25] \"HitandRun\"                     \"Pedestrian\"                   \n[27] \"FatalCollision\"                \"IntersectionRelated\"          \n[29] \"TrafficControlDevice\"          \"WorkZone\"                     \n[31] \"ViolationSpeed\"                \"ViolationTooClose\"            \n[33] \"ViolationTrafficControlDevice\" \"ViolationTurning\"             \n[35] \"ViolationWrongWay\"             \"ViolationLane\"                \n[37] \"ViolationCrosswalk\"            \"ViolationFailureToYield\"      \n[39] \"ViolationAggressiveDriving\"    \"OperatorImpaired\"             \n[41] \"OperatorDistracted\"            \"XCoordinate\"                  \n[43] \"YCoordinate\"                   \"TotalFatalities\"              \n[45] \"TotalInjuries\"                 \"TotalUnits\"                   \n[47] \"Latitude\"                      \"Longitude\"                    \n[49] \"LatitudePublic\"                \"LongitudePublic\"              \n[51] \"ESRI_OID\""
+  },
+  {
+    "objectID": "proposal.html#description-of-the-dataset",
+    "href": "proposal.html#description-of-the-dataset",
+    "title": "Accidents Crash Analysis",
+    "section": "Description of the Dataset:",
+    "text": "Description of the Dataset:\nThe dataset “NYC_Motor_Vehicle_Collisions_to_Person,” sourced from the official website of the Massachusetts Registry of Motor Vehicles, will be utilized for this project. This dataset was selected for its relevance in the context of a worrying increase in road accidents over the past 30 years. Analyzing this data could reveal patterns that would enable the creation of algorithms or models capable of predicting crashes. Such predictive tools could significantly aid in preventing accidents and potential fatalities. By examining this data, we aim to contribute by identifying the places and times where accidents are likely to occur, thereby enhancing public safety and ensuring safer travel experiences.\nThe dataset comprises 72 dimensions, including Crash Number, City/Town Name, Crash Date, Crash Severity, Crash Time, Crash Year, Maximum Injury Severity Reported, Age of the Youngest Known Driver, and Age of the Oldest Known Driver, among others."
+  },
+  {
+    "objectID": "proposal.html#questions",
+    "href": "proposal.html#questions",
+    "title": "Accidents Crash Analysis",
+    "section": "Questions",
+    "text": "Questions\nThe two questions you want to answer."
+  },
+  {
+    "objectID": "proposal.html#analysis-plan",
+    "href": "proposal.html#analysis-plan",
+    "title": "Accidents Crash Analysis",
+    "section": "Analysis plan",
+    "text": "Analysis plan\n\nA plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any).\n\nQuestion 1: What age group has been involved in the accidents and at what time the accidents were at peak? \nApproach\nPlots:\n1) plot 1:\n2) plot 2:\n\nThe second plot can rely on a time series or line plot for accidents over time of day. Therefore, through aggregating the number of accidents by hour, the plot can visualize the trend of accidents throughout a day. It is also suitable for using Shiny app which allow users to interact with the plot. There can be a time series bar, when the user drag the button, the plot can show different numbers of accidents in different hours in a day. Also, this plot can help identify peak times for accidents. \n\nVariables to be used and created:\nThe main variables will be used to answer this question are: \n\nAge: which will help to categorize individuals into different groups to see which age group is more involved in accidents\nCrash Time: which will help to determine the times when accidents are most frequent. \n\nThe variables will be created have not yet be determined, but some variables can be considered are: \n\nAge Group: which can categorize individuals into specific age groups, such as 0-18 (youths), 19-35 (young adults), 36- 50 (middle-aged adults), 51-65 (pre-seniors) and 65+ (seniors). There are columns with age groups, but the age can be regrouped so they can be grouped with different categories which allow for a clearer analysis of which age groups seem to be involved in accidents\nDay Part: instead of looking at the specific time,  it is helpful to divide day into different parts like Morning (5am-12:00am), Afternoon (12:01pm - 5:00pm), Evening (5:01pm - 9:00 pm), and Night (9:01 pm - 4:59am). In such a way, not only peak hours but also period of time can used to see when more accidents happen."
+  },
+  {
+    "objectID": "presentation.html",
+    "href": "presentation.html",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "The presentation is created using the Quarto CLI\n## sets the start of a new slide\n\n\n\n\nYou can use plain text\n\n\n\nor bullet points1\n\n\nor in two columns\n\n\n\nlike\nthis\n\n\n\n\n\n\n# A tibble: 2 × 5\n  term        estimate std.error statistic       p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;\n1 (Intercept)   25.3      3.08        8.22 0.00000000358\n2 speed         -0.116    0.0642     -1.81 0.0806       \n\n\n# A tibble: 1 × 12\n  r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC\n      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1    0.0983        0.0682  5.82      3.27  0.0806     1  -101.  207.  212.\n# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSome text\ngoes here"
+  },
+  {
+    "objectID": "presentation.html#quarto",
+    "href": "presentation.html#quarto",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "The presentation is created using the Quarto CLI\n## sets the start of a new slide"
+  },
+  {
+    "objectID": "presentation.html#layouts",
+    "href": "presentation.html#layouts",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "You can use plain text\n\n\n\nor bullet points1\n\n\nor in two columns\n\n\n\nlike\nthis"
+  },
+  {
+    "objectID": "presentation.html#code",
+    "href": "presentation.html#code",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "# A tibble: 2 × 5\n  term        estimate std.error statistic       p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;\n1 (Intercept)   25.3      3.08        8.22 0.00000000358\n2 speed         -0.116    0.0642     -1.81 0.0806       \n\n\n# A tibble: 1 × 12\n  r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC\n      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1    0.0983        0.0682  5.82      3.27  0.0806     1  -101.  207.  212.\n# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;"
+  },
+  {
+    "objectID": "presentation.html#plot-and-text",
+    "href": "presentation.html#plot-and-text",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "Some text\ngoes here"
+  },
+  {
+    "objectID": "presentation.html#tables",
+    "href": "presentation.html#tables",
+    "title": "Accidents Crash Analysis",
+    "section": "Tables",
+    "text": "Tables\nIf you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,\n\n\n\n\n\nspecies\nisland\nbill_length_mm\nbill_depth_mm\nflipper_length_mm\nbody_mass_g\nsex\n\n\n\n\nAdelie\nTorgersen\n39.1\n18.7\n181\n3750\nmale\n\n\nAdelie\nTorgersen\n39.5\n17.4\n186\n3800\nfemale\n\n\nAdelie\nTorgersen\n40.3\n18.0\n195\n3250\nfemale\n\n\nAdelie\nTorgersen\nNA\nNA\nNA\nNA\nNA\n\n\nAdelie\nTorgersen\n36.7\n19.3\n193\n3450\nfemale\n\n\nAdelie\nTorgersen\n39.3\n20.6\n190\n3650\nmale"
+  },
+  {
+    "objectID": "presentation.html#images",
+    "href": "presentation.html#images",
+    "title": "Accidents Crash Analysis",
+    "section": "Images",
+    "text": "Images\n\n\n\nImage credit: Danielle Navarro, Percolate."
+  },
+  {
+    "objectID": "presentation.html#math-expressions",
+    "href": "presentation.html#math-expressions",
+    "title": "Accidents Crash Analysis",
+    "section": "Math Expressions",
+    "text": "Math Expressions\nYou can write LaTeX math expressions inside a pair of dollar signs, e.g. $\\alpha+\\beta$ renders \\(\\alpha + \\beta\\). You can use the display style with double dollar signs:\n$$\\bar{X}=\\frac{1}{n}\\sum_{i=1}^nX_i$$\n\\[\n\\bar{X}=\\frac{1}{n}\\sum_{i=1}^nX_i\n\\]\nLimitations:\n\nThe source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting $$ must appear in the very beginning of a line, followed immediately by a non-space character, and the ending $$ must be at the end of a line, led by a non-space character;\nThere should not be spaces after the opening $ or before the closing $."
+  },
+  {
+    "objectID": "presentation.html#feeling-adventurous",
+    "href": "presentation.html#feeling-adventurous",
+    "title": "Accidents Crash Analysis",
+    "section": "Feeling adventurous?",
+    "text": "Feeling adventurous?\n\nYou are welcomed to use the default styling of the slides. In fact, that’s what I expect majority of you will do. You will differentiate yourself with the content of your presentation.\nBut some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs."
+  },
+  {
+    "objectID": "presentation.html#footnotes",
+    "href": "presentation.html#footnotes",
+    "title": "Accidents Crash Analysis",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nAnd add footnotes↩︎"
+  },
+  {
+    "objectID": "proposal.html#introduction",
+    "href": "proposal.html#introduction",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Introduction",
+    "text": "Introduction\nIn response to the critical issue of road safety in Tucson, we propose a project that utilizes the comprehensive accident crash data-set provided by the Tucson Police Department. Our aim is to develop an interactive spatio-temporal visualization to highlight patterns, trends, and hot-spots of traffic accidents in the city. This initiative seeks to leverage data for societal benefit, offering insights that can contribute to improved safety measures and awareness within the Tucson community.."
+  },
+  {
+    "objectID": "proposal.html#why-this-dataset",
+    "href": "proposal.html#why-this-dataset",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Why this dataset?",
+    "text": "Why this dataset?\nChoosing the Tucson accident crash data-set for project is a decision rooted in both relevance and practicality. As students at the University of Arizona, located in the heart of Tucson, this data-set offers a unique opportunity to study a subject that directly impacts the community. Analyzing traffic collision data within the city not only allows us to apply the theoretical knowledge we’ve gained in our data analysis courses but also provides insights into urban safety and transportation issues that affect peers and fellow residents. This project is not just an academic exercise; it’s a chance to contribute to a safer, more informed Tucson."
+  },
+  {
+    "objectID": "proposal.html#analysis-goal",
+    "href": "proposal.html#analysis-goal",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Analysis Goal",
+    "text": "Analysis Goal\nThe primary objective of our project is to delve deep into the Tucson accident crash dataset to uncover underlying patterns and factors contributing to road accidents within Tucson, where the University of Arizona is located. By leveraging the extensive data provided by the Tucson Police Department, we aim to analyze various dimensions such as the time, location, and nature of accidents, in addition to identifying high-risk areas and times for collisions. Furthermore, our analysis seeks to explore the impact of environmental and temporal variables—like weather conditions and time of day—on the frequency and severity of accidents.\nIn doing so, we intend to not only highlight critical safety concerns but also to propose data-driven recommendations for enhancing road safety measures in Tucson. Through advanced data visualization techniques and statistical analysis, we plan to make our findings accessible to a broad audience, including local authorities, the university community, and the general public. Ultimately, our goal is to contribute to the ongoing efforts to reduce traffic-related injuries and fatalities, promoting a safer environment for the residents and visitors of Tucson."
+  },
+  {
+    "objectID": "proposal.html#objective",
+    "href": "proposal.html#objective",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Objective",
+    "text": "Objective\nOur project’s primary goal is to develop a dynamic and user-friendly tool that offers detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. By enabling various stakeholders, including city planners, policy-makers, local residents, and fellow students, to access and interact with our findings, we aspire to contribute to informed decision-making processes and the implementation of effective road safety measures."
+  },
+  {
+    "objectID": "proposal.html#project-plan",
+    "href": "proposal.html#project-plan",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Project Plan",
+    "text": "Project Plan\n\nData Preparation and Analysis :\n\nBegin with a thorough cleaning and preprocessing of the Tucson accident crash dataset to ensure accuracy and usability.\nConduct a comprehensive analysis focusing on temporal trends (time of day, day of the week, months), spatial distribution (accident hotspots), and accident severity (fatalities, injuries).\n\nDevelopment of Interactive Visualizations :\n\nUtilize R Shiny for the creation of an interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).\nImplement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson.\nUse ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.\n\nAccessibility and User Experience :\n\nDesign the dashboard with a focus on accessibility, ensuring that our visualizations are informative and usable for all.\nIncorporate user-friendly features, such as slicer to highlight key insights and facilitate understanding.\n\nOutreach and Impact :\n\nPlan to present our findings to local authorities and community groups to foster discussions on improving road safety.\nPublish our interactive dashboard online, making it accessible to the public for educational and awareness purposes."
+  },
+  {
+    "objectID": "proposal.html#team-roles",
+    "href": "proposal.html#team-roles",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Team Roles",
+    "text": "Team Roles\nOur team will leverage its diverse skill sets to ensure the success of the project, with members taking on roles that include data analysis, visualization design, dashboard development, and project management. Regular meetings will be scheduled to review progress, address challenges, and ensure that the project remains on track to meet its objectives."
+  },
+  {
+    "objectID": "proposal.html#expected-outcomes",
+    "href": "proposal.html#expected-outcomes",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Expected Outcomes",
+    "text": "Expected Outcomes\nWe anticipate that our project will not only enhance our understanding and application of data analysis techniques but also provide valuable insights into traffic accident trends in Tucson. By highlighting areas and times of high risk, our work aims to support efforts to reduce accidents and improve road safety for all city residents."
+  },
+  {
+    "objectID": "proposal.html#conclusion",
+    "href": "proposal.html#conclusion",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Conclusion",
+    "text": "Conclusion\nWith a deep commitment to applying our analytical skills for the betterment of our community, we believe that this project represents a meaningful opportunity to make a tangible difference in the area of road safety in Tucson. We are excited about the potential of our interactive spatio-temporal visualization tool to illuminate insights that can lead to positive changes in our community."
+  },
+  {
+    "objectID": "proposal.html#timeline",
+    "href": "proposal.html#timeline",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Timeline",
+    "text": "Timeline\n\n\n\n\n\nTask Name\nStatus\nAssignee\nDue\nPriority\nSummary\n\n\n\n\nProposal-For Peer Review\n\nAll\nApril 1\nHigh\nWrite proposal for peer review\n\n\nPeer Review\n\nAll\nApril 1\nMedium\nWrite up peer reviews for other groups\n\n\nProposal-Updated\n\nAll\nApril 8\nMedium\nUpdate proposal using peer feedback\n\n\nProposal-Final\n\nAll\nApril 15\nHigh\nUpdate proposal using instructor feedback"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Project Title",
+    "section": "",
+    "text": "Add project abstract here."
+  },
+  {
+    "objectID": "index.html#abstract",
+    "href": "index.html#abstract",
+    "title": "Project Title",
+    "section": "",
+    "text": "Add project abstract here."
+  }
+]
