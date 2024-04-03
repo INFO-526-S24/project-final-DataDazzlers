@@ -30,7 +30,7 @@ library(tidyverse)
 #| label: load-dataset
 #| message: false
 library(here)
-crash <- read.csv(here('Data','NYC_Motor_Vehicle_Collisions_to_Person.csv'))
+crash <- read.csv(here('data','NYC_Motor_Vehicle_Collisions_to_Person.csv'))
 crash|>glimpse()
 crash
 ```
