@@ -154,18 +154,21 @@ With a deep commitment to applying our analytical skills for the betterment of o
 
 ## Timeline to Completion
 
--   Week of **03 April**
-    -   Have proposal prepared for peer review.
-    -   Provide peer review for other groups in class.
+-   Week of **01 April**
+    -   Have proposal prepared for peer review on 03 April.
+    -   Provide peer review for other groups on 03 April.
 -   Week of **08 April**
-    -   Make changes to proposal based on peer review for instructor review and resubmit.
+    -   Make changes to proposal based on peer review for instructor review and resubmit by end of day 08 April.
 -   Week of **15 April**
     -   Split group members into Q1 and Q2 teams and come up with plans to answer each question.
     -   Do individual exploration of the data and start first drafts of visualizations to compare with other team members in/between each group.
 -   Week of **22 April, 29 April**
     -   Create presentation-ready visualizations.
-    -   Discuss how to implement these visualizations into the Shiny app.
+    -   Implement these visualizations into the Shiny app and finalize dashboard app.
     -   Complete write up.
     -   Finalize presentation slide deck.
     -   Compile website.
     -   Practice presentation using timer.
+-   Week of **06 May**
+    -   Submit all materials by this deadline.
+    -   Give presentation in class. 
