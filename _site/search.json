@@ -1,0 +1,170 @@
+[
+  {
+    "objectID": "proposal.html",
+    "href": "proposal.html",
+    "title": "Tucson Car Collision Analysis",
+    "section": "",
+    "text": "Code\nif(!require(pacman))\n  install.packages(\"pacman\")\n\npacman::p_load(\n  tidyverse,\n  dlookr\n  )"
+  },
+  {
+    "objectID": "proposal.html#introduction",
+    "href": "proposal.html#introduction",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Introduction",
+    "text": "Introduction\nIn response to the critical issue of road safety in Tucson, we propose a project that utilizes the comprehensive accident crash data set provided by the Tucson Police Department. Our aim is to develop an interactive spatiotemporal visualization to highlight patterns, trends, and hot-spots of traffic accidents in the city. This initiative seeks to leverage data for societal benefit, offering insights that can contribute to improved safety measures and awareness within the Tucson community."
+  },
+  {
+    "objectID": "proposal.html#dataset",
+    "href": "proposal.html#dataset",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Dataset",
+    "text": "Dataset\nThis dataset is taken from the GIS Data from the City of Tucson, which displays Tucson Police’s publicly-available records of vehicle collisions from March 2022 to the present. Variables in this dataset include date of collision, injury severity, manner of collision, if the collision was fatal, etc. A full list of these variables is provided below.\n\n\nCode\ncrash &lt;- read.csv(\"data/tucson_data.csv\")\nglimpse(crash)\n\n\nRows: 35,598\nColumns: 51\n$ AccidentID                    &lt;dbl&gt; 1704080490, 1707080430, 1710020646, 1710…\n$ Dupe                          &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…\n$ Agency                        &lt;chr&gt; \"TPD \", \"TPD \", \"TPD \", \"TPD \", \"TPD \", …\n$ CollisionDate                 &lt;chr&gt; \"2017/04/08 00:00:00+00\", \"2017/07/08 00…\n$ YearOccu                      &lt;int&gt; 2017, 2017, 2017, 2017, 2017, 2018, 2018…\n$ Month                         &lt;chr&gt; \"April\", \"July\", \"October\", \"October\", \"…\n$ MonthOccu                     &lt;int&gt; 4, 7, 10, 10, 11, 1, 1, 1, 1, 1, 1, 1, 2…\n$ MonthAbbr                     &lt;chr&gt; \"Apr\", \"Jul\", \"Oct\", \"Oct\", \"Nov\", \"Jan\"…\n$ TimeOccu                      &lt;int&gt; 1900, 1600, 2000, 700, 1700, 500, 1800, …\n$ Day                           &lt;chr&gt; \"Saturday\", \"Saturday\", \"Monday\", \"Wedne…\n$ YeartoDate                    &lt;chr&gt; \"No\", \"No\", \"No\", \"No\", \"No\", \"Yes\", \"Ye…\n$ YtdDupl                       &lt;int&gt; 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0…\n$ TrafficOffense                &lt;dbl&gt; 3001, 2101, 3001, 3001, 3002, 3112, 3202…\n$ OffenseDesc                   &lt;chr&gt; \"Fatal Motor Vehicle Accident: With Pede…\n$ InjurySeverity                &lt;chr&gt; \"Fatal Injury\", \"Fatal Injury\", \"Fatal I…\n$ CollisionType                 &lt;chr&gt; \"\", \"\", \"\", \"\", \"\", \"Vehicle / Vehicle\",…\n$ CollisionManner               &lt;chr&gt; \"Unknown\", \"Unknown\", \"Unknown\", \"Unknow…\n$ Division                      &lt;chr&gt; \"South\", \"East\", \"West\", \"Midtown\", \"Eas…\n$ Squad                         &lt;chr&gt; \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", \"\", …\n$ Ward                          &lt;chr&gt; \"5\", \"2\", \"3\", \"6\", \"4\", \"3\", \"6\", \"3\", …\n$ CollisionNeighborhd           &lt;chr&gt; \"T103\", \"T401\", \"T204\", \"T304\", \"T408\", …\n$ AccidentLocation              &lt;chr&gt; \"\", \"\", \"\", \"\", \"\", \"PRINCE RD & FLOWING…\n$ CollisionDirection            &lt;chr&gt; \"\", \"\", \"\", \"\", \"\", \"Unknown At PRINCE R…\n$ Distance                      &lt;chr&gt; \"\", \"\", \"\", \"\", \"\", \"\", \"Approximately 5…\n$ HitandRun                     &lt;chr&gt; \"No\", \"No\", \"No\", \"No\", \"No\", \"Yes\", \"No…\n$ Pedestrian                    &lt;chr&gt; \"No\", \"No\", \"No\", \"No\", \"No\", \"No\", \"No\"…\n$ FatalCollision                &lt;chr&gt; \"Yes\", \"Yes\", \"Yes\", \"Yes\", \"Yes\", \"No\",…\n$ IntersectionRelated           &lt;chr&gt; \"No\", \"No\", \"No\", \"No\", \"No\", \"Yes\", \"No…\n$ TrafficControlDevice          &lt;int&gt; NA, NA, NA, NA, NA, 1, 0, 1, 1, 1, 0, 1,…\n$ WorkZone                      &lt;int&gt; NA, NA, NA, NA, NA, 0, 0, 0, 0, 0, 0, 0,…\n$ ViolationSpeed                &lt;chr&gt; \"No\", \"No\", \"No\", \"No\", \"No\", \"No\", \"No\"…\n$ ViolationTooClose             &lt;int&gt; NA, NA, NA, NA, NA, 0, 1, 1, 0, 1, 0, 0,…\n$ ViolationTrafficControlDevice &lt;int&gt; NA, NA, NA, NA, NA, 1, 0, 0, 0, 0, 0, 0,…\n$ ViolationTurning              &lt;int&gt; NA, NA, NA, NA, NA, 0, 0, 0, 1, 0, 0, 0,…\n$ ViolationWrongWay             &lt;int&gt; NA, NA, NA, NA, NA, 0, 0, 0, 0, 0, 0, 0,…\n$ ViolationLane                 &lt;int&gt; NA, NA, NA, NA, NA, 0, 0, 0, 0, 0, 0, 0,…\n$ ViolationCrosswalk            &lt;int&gt; NA, NA, NA, NA, NA, 0, 0, 0, 0, 0, 0, 0,…\n$ ViolationFailureToYield       &lt;int&gt; NA, NA, NA, NA, NA, 0, 0, 0, 0, 0, 0, 0,…\n$ ViolationAggressiveDriving    &lt;int&gt; NA, NA, NA, NA, NA, 0, 0, 0, 0, 0, 0, 0,…\n$ OperatorImpaired              &lt;chr&gt; \"No\", \"No\", \"No\", \"No\", \"No\", \"No\", \"No\"…\n$ OperatorDistracted            &lt;chr&gt; \"No\", \"No\", \"No\", \"No\", \"No\", \"Yes\", \"No…\n$ XCoordinate                   &lt;dbl&gt; 993484.3, 1021945.5, 1000255.6, 1016600.…\n$ YCoordinate                   &lt;dbl&gt; 426065.6, 453977.2, 464006.1, 453793.3, …\n$ TotalFatalities               &lt;int&gt; 1, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1…\n$ TotalInjuries                 &lt;int&gt; 1, 2, 1, 2, 2, 1, 0, 0, 1, 0, 0, 1, 1, 1…\n$ TotalUnits                    &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …\n$ Latitude                      &lt;dbl&gt; 32.16779, 32.24378, 32.27190, 32.24341, …\n$ Longitude                     &lt;dbl&gt; -110.9682, -110.8753, -110.9452, -110.89…\n$ LatitudePublic                &lt;dbl&gt; 32.16779, 32.24350, 32.27213, 32.24341, …\n$ LongitudePublic               &lt;dbl&gt; -110.9682, -110.8756, -110.9458, -110.89…\n$ ESRI_OID                      &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1…"
+  },
+  {
+    "objectID": "proposal.html#why-this-dataset",
+    "href": "proposal.html#why-this-dataset",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Why this dataset?",
+    "text": "Why this dataset?\nChoosing the Tucson accident crash dataset for project is a decision rooted in both relevance and practicality. As students at the University of Arizona, located in the heart of Tucson, this dataset offers a unique opportunity to study a subject that directly impacts the community. Analyzing traffic collision data within the city not only allows us to apply the theoretical knowledge we’ve gained in our data analysis courses but also provides insights into urban safety and transportation issues that affect peers and fellow residents. This project is not just an academic exercise; it’s a chance to contribute to a safer, more informed Tucson."
+  },
+  {
+    "objectID": "proposal.html#objective",
+    "href": "proposal.html#objective",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Objective",
+    "text": "Objective\nOur project’s primary goal is to develop a dynamic and user-friendly tool that offers detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. By enabling various stakeholders, including city planners, policy-makers, local residents, and fellow students, to access and interact with our findings, we aspire to contribute to informed decision-making processes and the implementation of effective road safety measures."
+  },
+  {
+    "objectID": "proposal.html#overall-project-plan",
+    "href": "proposal.html#overall-project-plan",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Overall Project Plan",
+    "text": "Overall Project Plan\n\nData Preparation and Analysis :\n\nBegin with a thorough cleaning and pre-processing of the Tucson accident crash dataset to ensure accuracy and usability.\nConduct a comprehensive analysis focusing on temporal trends (time of day, day of the week, months), spatial distribution (accident hotspots), and accident severity (fatalities, injuries).\n\nDevelopment of Interactive Visualizations :\n\nUtilize R Shiny for the creation of an interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).\nImplement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson using the latitude and longitude coordinates in the dataset.\nUse ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.\n\nAccessibility and User Experience :\n\nDesign the dashboard with a focus on accessibility, ensuring that our visualizations are informative and usable for all.\nIncorporate user-friendly features, such as slicer to highlight key insights and facilitate understanding.\n\nOutreach and Impact :\n\nPlan to present our findings to local authorities and community groups to foster discussions on improving road safety.\nPublish our interactive dashboard online, making it accessible to the public for educational and awareness purposes."
+  },
+  {
+    "objectID": "proposal.html#analysis-plan",
+    "href": "proposal.html#analysis-plan",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Analysis Plan",
+    "text": "Analysis Plan\nThe primary objective of our project is to delve deep into the Tucson accident crash dataset to uncover underlying patterns and factors contributing to road accidents within Tucson. By leveraging the extensive data provided by the Tucson Police Department, we aim to analyze how various dimensions such as day, time, injury severity, number of fatalities, and type of violation are all related to each other.\nThe two specific questions we aim to answer are:\n\nQuestion 1\nMembers: Sanja Dmitrovic, Jiayue He, Vidhyananth Sivashanmugam\nDoes day of the week and/or time of day affect severity and the number of accidents?\nVariables to use:\n\nTimeOccu (time at which accident occurred)\nDay (day of week accident occurred)\nInjurySeverity (how serious the injury caused by accident was)\n\nSome additional variables may be used such as:\n\nOperatorImpaired (if the operator was impaired due to substances or other reasons)\nOperatorDistracted (if the operator was distracted)\n\nThese variables may help us explore why certain days of the weeks or times of day lead to more accidents. For example, our hypothesis is that weekend nights would lead to more accidents due to more usage of drugs and alcohol by the driver. This factors could also explain why some accidents are more severe than others.\nPlots to use: To answer this question, we plan to create daily and hourly time series plots to easily observe trends in accident frequency and injury severity. In the Shiny app, there can be a time series bar where the user drags the button and the plot shows the different numbers of accidents in different hours in a day and days in the week.\n\n\nQuestion 2\nMembers: Naitik Shah, Varun Soni, Mohammad Ali Farmani\nWhat is the relationship between the type of violation (e.g., failure to yield, aggressive driving) and if the accident resulted in a fatality?\nVariables to use:\n\nFatalCollision (yes or no if accident resulted in fatality or not)\nTotalFatalities (number of fatalities reported as an integer)\nAll Violation variables which report yes or no (i.e., ViolationSpeed, ViolationTooClose, ViolationTrafficControlDevice, ViolationTurning, ViolationWrongWay, ViolationLane, ViolationFailuretoYield, ViolationCrosswalk, ViolationAggressiveDriving).\n\nPlots to create: For the Shiny app, we will create a series of stacked bar plots that show the number of accidents based the type of violation. Pie charts may be included to provide a high-level summary of the percentage of crashes per violation type.\nIn the end, we aim for the user to hover over various areas in Tucson and see the time series plots and bar plots that give insights to the questions posed above."
+  },
+  {
+    "objectID": "proposal.html#team-roles",
+    "href": "proposal.html#team-roles",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Team Roles",
+    "text": "Team Roles\nOur team will leverage its diverse skill sets to ensure the success of the project. Although groups have been assigned to each analysis question, all members will perform data analysis, visualization design, dashboard development, and project management. Regular meetings will be scheduled to review progress, address challenges, and ensure that the project remains on track to meet its objectives."
+  },
+  {
+    "objectID": "proposal.html#expected-outcomes",
+    "href": "proposal.html#expected-outcomes",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Expected Outcomes",
+    "text": "Expected Outcomes\nWe anticipate that our project will not only enhance our understanding and application of data analysis techniques but also provide valuable insights into traffic accident trends in Tucson. By highlighting areas and times of high risk, our work aims to support efforts to reduce accidents and improve road safety for all city residents."
+  },
+  {
+    "objectID": "proposal.html#conclusion",
+    "href": "proposal.html#conclusion",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Conclusion",
+    "text": "Conclusion\nWith a deep commitment to applying our analytical skills for the betterment of our community, we believe that this project represents a meaningful opportunity to make a tangible difference in the area of road safety in Tucson. We are excited about the potential of our interactive spatiotemporal visualization tool to illuminate insights that can lead to positive changes in our community."
+  },
+  {
+    "objectID": "proposal.html#timeline-to-completion",
+    "href": "proposal.html#timeline-to-completion",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Timeline to Completion",
+    "text": "Timeline to Completion\n\nWeek of 03 April\n\nHave proposal prepared for peer review.\nProvide peer review for other groups in class.\n\nWeek of 08 April\n\nMake changes to proposal based on peer review for instructor review and resubmit.\n\nWeek of 15 April\n\nSplit group members into Q1 and Q2 teams.\nDo individual exploration of the data and start first drafts of visualizations to compare with other team members in/between each group.\n\nWeek of 22 April, 29 April\n\nCreate presentation-ready visualizations.\nDiscuss how to implement these visualizations into the Shiny app.\nComplete write up.\nFinalize presentation slide deck.\nCompile website.\nPractice presentation using timer."
+  },
+  {
+    "objectID": "presentation.html",
+    "href": "presentation.html",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "The presentation is created using the Quarto CLI\n## sets the start of a new slide\n\n\n\n\nYou can use plain text\n\n\n\nor bullet points1\n\n\nor in two columns\n\n\n\nlike\nthis\n\n\n\n\n\n\n# A tibble: 2 × 5\n  term        estimate std.error statistic       p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;\n1 (Intercept)   25.3      3.08        8.22 0.00000000358\n2 speed         -0.116    0.0642     -1.81 0.0806       \n\n\n# A tibble: 1 × 12\n  r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC\n      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1    0.0983        0.0682  5.82      3.27  0.0806     1  -101.  207.  212.\n# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSome text\ngoes here"
+  },
+  {
+    "objectID": "presentation.html#quarto",
+    "href": "presentation.html#quarto",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "The presentation is created using the Quarto CLI\n## sets the start of a new slide"
+  },
+  {
+    "objectID": "presentation.html#layouts",
+    "href": "presentation.html#layouts",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "You can use plain text\n\n\n\nor bullet points1\n\n\nor in two columns\n\n\n\nlike\nthis"
+  },
+  {
+    "objectID": "presentation.html#code",
+    "href": "presentation.html#code",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "# A tibble: 2 × 5\n  term        estimate std.error statistic       p.value\n  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;\n1 (Intercept)   25.3      3.08        8.22 0.00000000358\n2 speed         -0.116    0.0642     -1.81 0.0806       \n\n\n# A tibble: 1 × 12\n  r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC\n      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1    0.0983        0.0682  5.82      3.27  0.0806     1  -101.  207.  212.\n# ℹ 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;"
+  },
+  {
+    "objectID": "presentation.html#plot-and-text",
+    "href": "presentation.html#plot-and-text",
+    "title": "Accidents Crash Analysis",
+    "section": "",
+    "text": "Some text\ngoes here"
+  },
+  {
+    "objectID": "presentation.html#tables",
+    "href": "presentation.html#tables",
+    "title": "Accidents Crash Analysis",
+    "section": "Tables",
+    "text": "Tables\nIf you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,\n\n\n\n\n\nspecies\nisland\nbill_length_mm\nbill_depth_mm\nflipper_length_mm\nbody_mass_g\nsex\n\n\n\n\nAdelie\nTorgersen\n39.1\n18.7\n181\n3750\nmale\n\n\nAdelie\nTorgersen\n39.5\n17.4\n186\n3800\nfemale\n\n\nAdelie\nTorgersen\n40.3\n18.0\n195\n3250\nfemale\n\n\nAdelie\nTorgersen\nNA\nNA\nNA\nNA\nNA\n\n\nAdelie\nTorgersen\n36.7\n19.3\n193\n3450\nfemale\n\n\nAdelie\nTorgersen\n39.3\n20.6\n190\n3650\nmale"
+  },
+  {
+    "objectID": "presentation.html#images",
+    "href": "presentation.html#images",
+    "title": "Accidents Crash Analysis",
+    "section": "Images",
+    "text": "Images\n\n\n\nImage credit: Danielle Navarro, Percolate."
+  },
+  {
+    "objectID": "presentation.html#math-expressions",
+    "href": "presentation.html#math-expressions",
+    "title": "Accidents Crash Analysis",
+    "section": "Math Expressions",
+    "text": "Math Expressions\nYou can write LaTeX math expressions inside a pair of dollar signs, e.g. $\\alpha+\\beta$ renders \\(\\alpha + \\beta\\). You can use the display style with double dollar signs:\n$$\\bar{X}=\\frac{1}{n}\\sum_{i=1}^nX_i$$\n\\[\n\\bar{X}=\\frac{1}{n}\\sum_{i=1}^nX_i\n\\]\nLimitations:\n\nThe source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting $$ must appear in the very beginning of a line, followed immediately by a non-space character, and the ending $$ must be at the end of a line, led by a non-space character;\nThere should not be spaces after the opening $ or before the closing $."
+  },
+  {
+    "objectID": "presentation.html#feeling-adventurous",
+    "href": "presentation.html#feeling-adventurous",
+    "title": "Accidents Crash Analysis",
+    "section": "Feeling adventurous?",
+    "text": "Feeling adventurous?\n\nYou are welcomed to use the default styling of the slides. In fact, that’s what I expect majority of you will do. You will differentiate yourself with the content of your presentation.\nBut some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs."
+  },
+  {
+    "objectID": "presentation.html#footnotes",
+    "href": "presentation.html#footnotes",
+    "title": "Accidents Crash Analysis",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nAnd add footnotes↩︎"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This project was developed by Data Dazzlers. For INFO 526 - Data Analysis & Visualization at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.\n\nNaitik Shah : 1st year Grad student pursuing Information Science - Human Centered Computing.\nVarun Soni : Final Year Grad student pursuing Information Science with emphasis on Machine Learning.\nVidhyananth Sivashanmugam : 2nd year Grad student pursuing Data Science.\nMohammad Ali Farmani : 2nd year PhD student in Hydrology and Atmospheric Sciences at University of Arizona.\nSanja Dmitrovic : Ph.D. in Optical Sciences at the University of Arizona. Next role will be remote sensing software engineer at NASA Goddard Space Flight Center.\nJiayue He : 2nd year Grad student Pursuing Information Science - Human Centered Computing."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Project Title",
+    "section": "",
+    "text": "Add project abstract here."
+  },
+  {
+    "objectID": "index.html#abstract",
+    "href": "index.html#abstract",
+    "title": "Project Title",
+    "section": "",
+    "text": "Add project abstract here."
+  }
+]
