@@ -120,7 +120,7 @@ Some additional variables may be used such as:
 
 These variables may help us explore why certain days of the weeks or times of day lead to more accidents. For example, our hypothesis is that weekend nights would lead to more accidents due to more usage of drugs and alcohol by the driver. This factors could also explain why some accidents are more severe than others.
 
-Plots to use: To answer this question, we plan to create daily and hourly time series plots to easily observe trends in accident frequency and injury severity. In the Shiny app, there can be a time series bar where the user drags the button and the plot shows the different numbers of accidents in different hours in a day and days in the week.
+Plots to create: To answer this question, we plan to create daily and hourly time series plots to easily observe trends in accident frequency and injury severity. In the Shiny app, there can be a time series bar where the user drags the button and the plot shows the different numbers of accidents in different hours in a day and days in the week.
 
 ### Question 2
 
