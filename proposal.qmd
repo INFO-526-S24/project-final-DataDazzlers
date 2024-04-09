@@ -49,11 +49,13 @@ This dataset is taken from the [GIS Data from the City of Tucson](https://gisdat
 crash_data <- read.csv("data/tucson_data.csv")
 
 tibble(
-  "Column Name" = names(crash_data),  # considering only the first five columns
-  "Data Type" = sapply(crash_data, class),  # considering only the first five columns
-  "Unique 5 Value" = sapply(crash_data, function(column) {
-    first_five_unique_values <- unique(column[!is.na(column)])[1:5]  # extract the first five unique non-NA values
-    if (all(sapply(first_five_unique_values, is.numeric))) {  # check if all first five unique values are numeric
+  "Column Name" = names(crash_data),
+  "Data Type" = sapply(crash_data, class),
+  "Unique 5 Values" = sapply(crash_data, function(column) {
+    non_na_values <- na.omit(column) # remove NA values
+    first_five_unique_values <- unique(non_na_values)[1:5]  
+    non_na_values <- non_na_values[non_na_values != "NA"]
+    if (all(sapply(first_five_unique_values, is.numeric))) {
       return(paste(format(first_five_unique_values, nsmall = 2), collapse = ", "))
     } else {
       return(paste(as.character(first_five_unique_values), collapse = ", "))
