@@ -2,13 +2,13 @@
 title: "Tucson Car Collision Analysis"
 subtitle: "Proposal"
 author: 
-  - name: "Data Dazzlers"
+  - name: "**Data Dazzlers**: <br> Sanja Dmitrovic, Jiayue He, Vidhyananth Sivashanmugam,<br> Naitik Shah, Varun Soni, Mohammad Ali Farmani" 
     affiliations:
       - name: "School of Information, University of Arizona"
 description: "Tucson Car Collision Analysis"
 format:
   html:
-    code-tools: true
+    code-tools: false
     code-overflow: wrap
     code-line-numbers: true
     embed-resources: true
@@ -18,15 +18,19 @@ execute:
   warning: false
 ---
 
-```{r,warning=FALSE,message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 #| label: load-pkgs
 #| message: false
+#| include: false 
+
 if(!require(pacman))
   install.packages("pacman")
 
 pacman::p_load(
   tidyverse,
-  dlookr
+  dlookr,
+  kableExtra,
+  DT
   )
 ```
 
@@ -40,9 +44,25 @@ This dataset is taken from the [GIS Data from the City of Tucson](https://gisdat
 
 ```{r}
 #| label: load-dataset
+#| echo: false
 
-crash <- read.csv("data/tucson_data.csv")
-glimpse(crash)
+crash_data <- read.csv("data/tucson_data.csv")
+
+tibble(
+  "Column Name" = names(crash_data),  # considering only the first five columns
+  "Data Type" = sapply(crash_data, class),  # considering only the first five columns
+  "Unique 5 Value" = sapply(crash_data, function(column) {
+    first_five_unique_values <- unique(column[!is.na(column)])[1:5]  # extract the first five unique non-NA values
+    if (all(sapply(first_five_unique_values, is.numeric))) {  # check if all first five unique values are numeric
+      return(paste(format(first_five_unique_values, nsmall = 2), collapse = ", "))
+    } else {
+      return(paste(as.character(first_five_unique_values), collapse = ", "))
+    }
+  })
+) |>
+  kable("html") |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) |>
+  column_spec(1, bold = T)
 
 ```
 

@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: Tucson Car Collision Analysis
+  title: "<img src='/images/car-crash-logo.jpg' alt='carcrash Logo' style='width: 2.7em; height: 2.3em; border-radius: 20%;'> <b> Tucson Car Collision Analysis</b>"
   navbar:
     right:
       - icon: github
