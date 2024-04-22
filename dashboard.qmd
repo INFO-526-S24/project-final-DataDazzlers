@@ -1,0 +1,388 @@
+---
+format: dashboard
+theme: [sandstone, data/custom.scss]
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| label: load-packages
+#| message: false
+
+pacman::p_load(
+  tidyverse,
+  dlookr,
+  kableExtra,
+  reader,
+  scales,
+  gt,
+  DT,
+  janitor,
+  stringer,
+  leaflet,
+  highcharter
+  )
+
+```
+
+```{r}
+#| label: load-data
+#| message: false
+#| echo: false
+#| results: hide
+
+boolan_tranform <- function(vector) {
+  result <- ifelse(vector == 1, "Yes", "No")
+  return(result)
+}
+
+# read data
+cars_data <- read.csv("data/tucson_data.csv") |>
+  clean_names() |>
+  mutate(
+    collision_date  = format(ymd_hms(collision_date), "%m/%d/%Y"), # Clean date type
+    year = year_occu,
+    month = month_abbr,
+    time = format(strptime(time_occu, format = "%H%M", tz = "UTC"), format = "%I:%M %p"),
+    weekday = if_else(day %in% c("Saturday", "Sunday"), "Weekend", "Weekday"),
+    offense_desc = if_else(str_detect(offense_desc, "^\\s*$"), "Unknown", offense_desc),
+    offense_desc_main = str_split_fixed(offense_desc, ":", n = 2)[, 1],
+    offense_desc_sub = if_else(str_detect(
+                    str_split_fixed(offense_desc, ":", n = 2)[, 2], "^\\s*$"),
+                    "Other", 
+                    str_split_fixed(offense_desc, ":", n = 2)[, 2]),
+    offense_type = case_when(
+          str_detect(offense_desc_main, "Fatal") ~ "Fatal Accidents",
+          str_detect(offense_desc_main, "Injury") ~ "Injury Accidents",
+          str_detect(offense_desc_main, "Property Damage") ~ "Property Damage Accidents",
+          str_detect(offense_desc_main, "Driving Under the Influence") ~ "DUI Accidents",
+          str_detect(offense_desc_main, "Non-Traffic") ~ "Non-Traffic Accidents",
+          str_detect(offense_desc_main, "Other") ~ "Other Vehicle Accidents",
+          TRUE ~ "Miscellaneous Accidents"
+          ),
+    collision_type = if_else(str_detect(collision_type, "^\\s*$"),
+                             "Unknown", collision_type),
+    in_out_vehicle = case_when(
+      grepl("Pedestrian|Bicycle|Parked_Unit|Single Pedestrian", 
+          collision_type, ignore.case = TRUE) ~ "Out of Vehicle",
+      grepl("Vehicle|Motorcycle|Bus|Train", 
+            collision_type, ignore.case = TRUE) ~ "In Vehicle",
+    TRUE ~ "Unknown"),
+    distance = if_else(str_detect(distance, "^\\s*$"), "Unknown", distance),
+    traffic_control_device = boolan_tranform(traffic_control_device),
+    work_zone = boolan_tranform(work_zone),
+    violation_too_close = boolan_tranform(violation_too_close),
+    violation_traffic_control_device = boolan_tranform(violation_traffic_control_device),
+    violation_turning = boolan_tranform(violation_turning),
+    violation_wrong_way = boolan_tranform(violation_wrong_way),
+    violation_lane = boolan_tranform(violation_lane),
+    violation_crosswalk = boolan_tranform(violation_crosswalk),
+    violation_failure_to_yield = boolan_tranform(violation_failure_to_yield),
+    violation_aggressive_driving = boolan_tranform(violation_aggressive_driving),
+    collision_neighborhd = if_else(str_detect(collision_neighborhd, "^\\s*$"),
+                                   "Uknw", collision_neighborhd), 
+    collision_direction = if_else(str_detect(collision_direction, "^\\s*$"),
+                                  "Unknown", collision_direction), 
+    accident_location = if_else(str_detect(accident_location, "^\\s*$"),
+                                "Unknown", accident_location)
+    ) |>
+  select(accident_id, collision_date, year, month, day, weekday,
+         offense_desc_main, offense_desc_sub,offense_type, injury_severity,
+         collision_type, collision_manner, division, distance, hitand_run,
+         pedestrian, fatal_collision, intersection_related, traffic_control_device,
+         work_zone, violation_speed, total_injuries, latitude, longitude, 
+         violation_too_close, violation_traffic_control_device,violation_turning,
+         violation_wrong_way, violation_lane, violation_crosswalk, ward,
+         violation_failure_to_yield, violation_aggressive_driving, operator_impaired,
+         operator_distracted, x_coordinate, y_coordinate, total_fatalities,
+         collision_neighborhd, collision_direction, accident_location,
+         intersection_related, in_out_vehicle) 
+
+```
+
+#  {.sidebar}
+
+This dashboard displays statistics for:
+
+|                |                  |
+|----------------|------------------|
+| **Collision**  | Total Accidents  |
+| **Injuries**   | Total Injuries   |
+| **Fatalities** | No of Fatalities |
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true"}
+## Disclaimer
+
+This dataset is taken from the [GIS Data from the City of Tucson](https://gisdata.tucsonaz.gov/datasets/tucson-police-collisions/explore "Dataset link"), which displays Tucson Police's publicly-available records of vehicle collisions from March 2022 to the present.
+:::
+
+# Overall
+
+```{r}
+#| label: overall-values
+#| results: hide
+
+n_accidents <- nrow(cars_data)
+n_injuries <- sum(cars_data$total_injuries, na.rm = TRUE)
+n_fatalities <- sum(cars_data$total_fatalities, na.rm = TRUE)
+injury_rate <- nrow(cars_data |> filter(total_injuries > 0)) / n_accidents
+fatal_rate <- nrow(cars_data |> filter(fatal_collision == "Yes")) / n_accidents
+
+# pivot summary
+summary_data_01 <- cars_data |>
+  group_by(year) |>
+  summarise(
+    fatalities = sum(total_fatalities, na.rm = TRUE),
+    injuries = sum(total_injuries, na.rm = TRUE),
+    accidents = n()
+  ) |>
+  pivot_longer(
+    cols = c(fatalities, injuries, accidents),
+    names_to = "metric", 
+    values_to = "count"
+  )
+
+summary_data_02 <- cars_data |>
+  filter(fatal_collision == "Yes") |>
+  group_by(division) |>
+  summarise(count = n()) |>
+  arrange(desc(count))
+
+```
+
+## Row {height="20%"}
+
+```{r}
+#| content: valuebox
+#| title: "Total Collisions"
+
+list(
+  color = "primary",
+  value = format(n_accidents, big.mark = ",") 
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Total Injuries"
+
+list(
+  color = "primary",
+  value = format(n_injuries, big.mark = ",")  
+)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Total Fatalities"
+
+list(
+  color = "primary",
+  value = format(n_fatalities, big.mark = ",")  
+)
+```
+```{r}
+#| content: valuebox
+#| title: "Injury Rate"
+
+list(
+  color = "primary",
+  value = sprintf("%.2f%%", injury_rate * 100) 
+)
+```
+```{r}
+#| content: valuebox
+#| title: "Fatality Rate"
+
+list(
+  color = "primary",
+  value = sprintf("%.2f%%", fatal_rate * 100)  
+)
+```
+## Row {height="80%"}
+
+### Column {width="40%"}
+
+```{r}
+#| title: Annual Car Collision Analysis
+
+summary_data_01 |>
+hchart("line", hcaes(x = year, y = count, group = metric)) |>
+  hc_xAxis(title = list(text = "Year"), labels = list(rotation = 0)) |>
+  hc_yAxis(title = list(text = "Total Count")) |>
+  hc_legend(
+    enabled = TRUE,
+    align = 'center',
+    verticalAlign = 'bottom',
+    layout = 'horizontal'
+  ) |>
+  hc_colors(c("green", "red", "blue")) |>
+  hc_plotOptions(
+    series = list(
+      marker = list(enabled = FALSE)
+    )
+  ) |>
+  hc_add_theme(hc_theme_smpl()) |>
+  hc_exporting(enabled = FALSE)
+```
+
+### Column {width="40%"}
+
+```{r}
+#| title: Collission by Division
+
+highchart() |>
+  hc_chart(type = "column", inverted = TRUE) |>
+  hc_xAxis(categories = summary_data_02$division, labels = list(enabled = TRUE)) |>
+  hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, format = '{point.y:.0f}'))) |>
+  hc_add_series(name = "", data = summary_data_02$count) |>
+  hc_legend(enabled = FALSE) 
+
+```
+
+### Column {width="20%"}
+
+#### Row {height="50%"}
+
+```{r}
+#| title: Injuries
+
+highchart() |>
+  hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  hc_plotOptions(pie = list(
+    innerSize = '50%',  # Creates the donut hole
+    startAngle = 0,
+    endAngle = 360,
+    dataLabels = list(enabled = TRUE, format = '{point.name}: {point.percentage:.1f}%')
+  )) |>
+  hc_legend(enabled = FALSE) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        filter(!is.na(total_injuries) & total_injuries > 0) |>
+        group_by(in_out_vehicle) |>
+        summarise(total_accidents = n())
+    )
+  )
+```
+
+#### Row {height="50%"}
+
+```{r}
+#| title: Fatalities
+
+highchart() |>
+  hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  hc_plotOptions(pie = list(
+    innerSize = '50%',  # Creates the donuts hole
+    startAngle = 0,
+    endAngle = 360,
+    dataLabels = list(enabled = TRUE, format = '{point.name}: {point.percentage:.1f}%')
+  )) |>
+  hc_legend(enabled = FALSE) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        filter(fatal_collision =="Yes") |>
+        group_by(in_out_vehicle) |>
+        summarise(total_accidents = n())
+    )
+  )
+
+```
+
+# Traffic Collision
+
+# Collision Reason
+
+# Collision Location
+```{r}
+# Segment divisions based on accident categories
+fatal_accidents <- cars_data %>%
+  filter(!is.na(latitude), !is.na(longitude)) |>
+  filter(offense_type == "Fatal Accidents")
+
+dui_accidents <- cars_data %>%
+  filter(!is.na(latitude), !is.na(longitude)) |>
+  filter(offense_type == "DUI Accidents")
+
+injury_accidents <- cars_data %>%
+  filter(!is.na(latitude), !is.na(longitude)) |>
+  filter(offense_type == "Injury Accidents")
+
+property_damage_accidents <- cars_data %>%
+  filter(!is.na(latitude), !is.na(longitude)) |>
+  filter(offense_type == "Property Damage Accidents")
+
+non_traffic_accidents <- cars_data %>%
+  filter(!is.na(latitude), !is.na(longitude)) |>
+  filter(offense_type == "Non-Traffic Accidents")
+
+other_vehicle_accidents <- cars_data %>%
+  filter(!is.na(latitude), !is.na(longitude)) |>
+  filter(offense_type == "Other Vehicle Accidents")
+
+# Create leaflet map
+combined_map <- leaflet() %>%
+  addTiles()
+
+# Define the bounding box for Tucson
+tucson_bounds <- list(
+  c(32.1313, -111.0788),  # Southwest corner
+  c(32.4998, -110.7337)   # Northeast corner
+)
+
+# Create leaflet map
+combined_map <- leaflet(options = leafletOptions(maxBounds = tucson_bounds))%>%
+  addTiles() %>%
+  addMarkers(data = fatal_accidents, clusterOptions = markerClusterOptions(), 
+             popup = ~paste("Offense Type:", offense_type),
+             label = ~offense_type,
+             labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
+             lng = ~longitude,
+             lat = ~latitude) %>%
+  addMarkers(data = dui_accidents, clusterOptions = markerClusterOptions(), 
+             popup = ~paste("Offense Type:", offense_type),
+             label = ~offense_type,
+             labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
+             lng = ~longitude,
+             lat = ~latitude) %>%
+  addMarkers(data = injury_accidents, clusterOptions = markerClusterOptions(), 
+             popup = ~paste("Offense Type:", offense_type),
+             label = ~offense_type,
+             labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
+             lng = ~longitude,
+             lat = ~latitude) %>%
+  addMarkers(data = property_damage_accidents, clusterOptions = markerClusterOptions(), 
+             popup = ~paste("Offense Type:", offense_type),
+             label = ~offense_type,
+             labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
+             lng = ~longitude,
+             lat = ~latitude) %>%
+  addMarkers(data = non_traffic_accidents, clusterOptions = markerClusterOptions(), 
+             popup = ~paste("Offense Type:", offense_type),
+             label = ~offense_type,
+             labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
+             lng = ~longitude,
+             lat = ~latitude) %>%
+  addMarkers(data = other_vehicle_accidents, clusterOptions = markerClusterOptions(), 
+             popup = ~paste("Offense Type:", offense_type),
+             label = ~offense_type,
+             labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
+             lng = ~longitude,
+             lat = ~latitude) %>%
+ # Fit map to the bounding box for Tucson
+  fitBounds(lng1 = tucson_bounds[[1]][[2]], lat1 = tucson_bounds[[1]][[1]], 
+            lng2 = tucson_bounds[[2]][[2]], lat2 = tucson_bounds[[2]][[1]])
+
+# Show the combined map
+combined_map
+
+```
+# Collision Time
