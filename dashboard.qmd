@@ -1,6 +1,6 @@
 ---
 format: dashboard
-theme: [sandstone, data/custom.scss]
+# theme: [sandstone, data/custom.scss]
 editor_options: 
   chunk_output_type: console
 ---
@@ -20,7 +20,9 @@ pacman::p_load(
   janitor,
   stringer,
   leaflet,
-  highcharter
+  highcharter,
+  waffle,
+  htmlwidgets
   )
 
 ```
@@ -43,7 +45,13 @@ cars_data <- read.csv("data/tucson_data.csv") |>
     collision_date  = format(ymd_hms(collision_date), "%m/%d/%Y"), # Clean date type
     year = year_occu,
     month = month_abbr,
-    time = format(strptime(time_occu, format = "%H%M", tz = "UTC"), format = "%I:%M %p"),
+    hour = ifelse(time_occu == 0,"12:00 AM",
+               ifelse(nchar(as.character(time_occu)) == 3,
+                      paste0(substr(as.character(time_occu), 1, 1), ":", ... =
+                               substr(as.character(time_occu), 2, 3), " AM"),
+                      format(strptime(as.character(time_occu), 
+                                      format = "%H%M", tz = "UTC"), 
+                             format = "%I:%M %p"))),
     weekday = if_else(day %in% c("Saturday", "Sunday"), "Weekend", "Weekday"),
     offense_desc = if_else(str_detect(offense_desc, "^\\s*$"), "Unknown", offense_desc),
     offense_desc_main = str_split_fixed(offense_desc, ":", n = 2)[, 1],
@@ -86,7 +94,7 @@ cars_data <- read.csv("data/tucson_data.csv") |>
     accident_location = if_else(str_detect(accident_location, "^\\s*$"),
                                 "Unknown", accident_location)
     ) |>
-  select(accident_id, collision_date, year, month, day, weekday,
+  select(accident_id, collision_date, year, month, day, weekday, hour, time_occu,
          offense_desc_main, offense_desc_sub,offense_type, injury_severity,
          collision_type, collision_manner, division, distance, hitand_run,
          pedestrian, fatal_collision, intersection_related, traffic_control_device,
@@ -183,6 +191,7 @@ list(
   value = format(n_fatalities, big.mark = ",")  
 )
 ```
+
 ```{r}
 #| content: valuebox
 #| title: "Injury Rate"
@@ -192,6 +201,7 @@ list(
   value = sprintf("%.2f%%", injury_rate * 100) 
 )
 ```
+
 ```{r}
 #| content: valuebox
 #| title: "Fatality Rate"
@@ -201,12 +211,13 @@ list(
   value = sprintf("%.2f%%", fatal_rate * 100)  
 )
 ```
+
 ## Row {height="80%"}
 
 ### Column {width="40%"}
 
 ```{r}
-#| title: Annual Car Collision Analysis
+#| title: Annual Car Collision
 
 summary_data_01 |>
 hchart("line", hcaes(x = year, y = count, group = metric)) |>
@@ -235,8 +246,12 @@ hchart("line", hcaes(x = year, y = count, group = metric)) |>
 
 highchart() |>
   hc_chart(type = "column", inverted = TRUE) |>
-  hc_xAxis(categories = summary_data_02$division, labels = list(enabled = TRUE)) |>
-  hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, format = '{point.y:.0f}'))) |>
+  hc_xAxis(categories = summary_data_02$division, 
+           labels = list(enabled = TRUE)) |>
+  hc_plotOptions(column = list(pointPadding = 0.04,
+                               groupPadding = 0.04,
+                               dataLabels = list(enabled = TRUE, 
+                                                 format = '{point.y:.0f}'))) |>
   hc_add_series(name = "", data = summary_data_02$count) |>
   hc_legend(enabled = FALSE) 
 
@@ -252,12 +267,14 @@ highchart() |>
 highchart() |>
   hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
   hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
-  hc_plotOptions(pie = list(
-    innerSize = '50%',  # Creates the donut hole
-    startAngle = 0,
-    endAngle = 360,
-    dataLabels = list(enabled = TRUE, format = '{point.name}: {point.percentage:.1f}%')
-  )) |>
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
   hc_legend(enabled = FALSE) |>
   hc_add_series(
     name = "Total",
@@ -278,12 +295,14 @@ highchart() |>
 highchart() |>
   hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
   hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
-  hc_plotOptions(pie = list(
-    innerSize = '50%',  # Creates the donuts hole
-    startAngle = 0,
-    endAngle = 360,
-    dataLabels = list(enabled = TRUE, format = '{point.name}: {point.percentage:.1f}%')
-  )) |>
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
   hc_legend(enabled = FALSE) |>
   hc_add_series(
     name = "Total",
@@ -299,37 +318,462 @@ highchart() |>
 
 # Traffic Collision
 
+```{r}
+#| label: traffic-collision-values
+#| results: hide
+
+# Calculate percentages by injury_severity
+summary_data_03 <- cars_data |>
+  group_by(injury_severity) |>
+  summarise(total_count = n()) |>
+  mutate(percentage = (total_count / sum(total_count)) * 100)
+
+# Calculate percentages by injury_severity
+summary_data_04 <- cars_data |>
+  group_by(year) |>
+  summarise(
+    fatalities = sum(total_fatalities, na.rm = TRUE)
+  )
+
+```
+
+## Row {height="60%"}
+
+### Column {width="50%"}
+
+```{r}
+#| title: Injury Severity
+
+# Create the High charter bar chart
+highchart() |>
+  hc_chart(type = "bar", inverted = TRUE) |>
+  hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
+  hc_xAxis(categories = summary_data_03$injury_severity, labels = list(enabled = TRUE)) |>
+  hc_plotOptions(bar = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            dataLabels = list(enabled = TRUE, format = "{point.y:.1f}%"))) |>
+  hc_add_series(data = summary_data_03$percentage) |>
+  hc_legend(enabled = FALSE) 
+
+```
+
+### Column {width="50%"}
+
+```{r}
+#| title: Fatal Collision
+
+highchart() |>
+  hc_chart(type = "column") |>
+  hc_xAxis(categories = summary_data_04$year, 
+           title = list(text = "Year"), 
+           labels = list(enabled = TRUE)) |>
+  hc_yAxis(title = list(text = "Fatalities")) |>
+  hc_tooltip(pointFormat = "{series.name}: <b>{point.y}</b>") |>
+  hc_plotOptions(column = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = "{point.y}"))) |>
+  hc_add_series(name = "Fatalities", data = summary_data_04$fatalities) |>
+  hc_legend(enabled = FALSE)
+
+```
+
+## Row {height="40%"}
+
+```{r}
+#| title: Collision Type
+
+# datatable
+cars_data |>
+  group_by(year, collision_type) |>
+  summarise(accidents = n(), .groups = "drop") |>
+  pivot_wider(
+    names_from = year,
+    values_from = accidents
+  ) |>
+  select(collision_type, everything()) |>
+  kable("html") |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) |>
+  column_spec(1, bold = T)
+
+```
+
 # Collision Reason
 
+## Row {height="50%"}
+
+### Column {width="60%"}
+
+```{r}
+#| title: Injury Severity
+
+highchart() |>
+  hc_chart(type = "bar", inverted = TRUE) |>
+  hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
+  hc_xAxis(categories = (summary_data_03 |>
+                           arrange(desc(percentage)))$injury_severity, 
+           labels = list(enabled = TRUE)) |>
+  hc_plotOptions(bar = list(pointPadding = 0.02,
+                            groupPadding = 0.02,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = "{point.y:.1f}%"))) |>
+  hc_add_series(data = (summary_data_03 |>
+                          arrange(desc(percentage)))$percentage) |>
+  hc_legend(enabled = FALSE) 
+```
+
+### Column {width="20%"}
+
+```{r}
+#| title: Impaired Driver-Involved
+
+highchart() |>
+  hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
+  hc_legend(enabled = FALSE) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        group_by(operator_impaired) |>
+        summarise(total_accidents = n(), .groups = "drop") 
+    )
+  )
+
+```
+
+### Column {width="20%"}
+
+```{r}
+#| title: Distracted Driver-Involved
+
+highchart() |>
+  hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
+  hc_legend(enabled = FALSE) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        group_by(operator_distracted) |>
+        summarise(total_accidents = n(), .groups = "drop") 
+    )
+  )
+
+```
+
+## Row {height="50%"}
+
+### Column {width="60%"}
+
+```{r}
+#| title: Accidents by Collision Manner (k)
+
+summary_data_05 <- cars_data |>
+  group_by(collision_manner) |>
+  summarise(accidents = n(), .groups = "drop") |>
+  mutate(collision_manner = stringr::str_wrap(collision_manner, width = 10),
+         accidents = accidents/1000) |>
+  arrange(desc(accidents)) |>
+  filter(collision_manner!="")
+
+highchart() |>
+  hc_chart(type = "column") |>
+  hc_xAxis(
+    categories = summary_data_05$collision_manner, 
+    labels = list(
+      rotation = 0,
+      align = "center",
+      style = list(
+        whiteSpace = 'normal',
+        textOverflow = 'none',
+        width = '8px'
+      )
+    )
+  ) |>
+  hc_yAxis(title = list(text = "Number of Accidents (K)")) |>
+  hc_tooltip(pointFormat = "{series.name}: <b>{point.y}K</b>") |>
+  hc_plotOptions(column = list(
+    pointPadding = 0.02,
+    groupPadding = 0.02,
+    dataLabels = list(
+      enabled = TRUE,
+      format = "{y}K",
+      fontSize = '1px'
+    )
+  )) |>
+  hc_add_series(
+    name = "Accidents",
+    data = summary_data_05$accidents
+  ) |>
+  hc_legend(enabled = FALSE)
+
+```
+
+### Column {width="20%"}
+
+```{r}
+#| title: Speeding Driver-Involved
+
+highchart() |>
+  hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
+  hc_legend(enabled = FALSE) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        group_by(violation_speed) |>
+        summarise(total_accidents = n(), .groups = "drop") 
+    )
+  )
+
+```
+
+### Column {width="20%"}
+
+```{r}
+#| title: Intersection Related
+
+highchart() |>
+  hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
+  hc_legend(enabled = FALSE) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        group_by(intersection_related) |>
+        summarise(total_accidents = n(), .groups = "drop") 
+    )
+  )
+
+```
+
 # Collision Location
+
+```{r}
+#| label: collision-location-values
+#| results: hide
+
+summary_data_06 <- cars_data |>
+  group_by(division) |>
+  summarise(total_count = n()) |>
+  mutate(percentage = (total_count / sum(total_count)) * 100) |>
+  arrange(desc(total_count))
+  
+summary_data_07 <- cars_data |>
+  group_by(ward) |>
+  summarise(total_count = n()) |>
+  mutate(percentage = (total_count / sum(total_count)) * 100) |>
+  arrange(desc(total_count))
+
+```
+
+## Row {height="50%"}
+
+```{r}
+#| title: Division
+
+highchart() |>
+  hc_chart(type = "column", inverted = TRUE) |>
+  hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
+  hc_xAxis(categories = summary_data_06$division,
+           labels = list(enabled = TRUE)) |>
+  hc_plotOptions(column = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = "{point.y:.1f}%"))) |>
+  hc_add_series(data = summary_data_06$percentage) |>
+  hc_legend(enabled = FALSE) 
+
+```
+
+## Row {height="50%"}
+
+```{r}
+#| title: Ward
+
+highchart() |>
+  hc_chart(type = "column") |>
+  hc_xAxis(categories = summary_data_07$ward,
+           title = list(text = "Year"), 
+           labels = list(enabled = TRUE)) |>
+  hc_yAxis(title = list(text = "Fatalities")) |>
+  hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
+  hc_plotOptions(column = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = "{point.y:.1f}%"))) |>
+  hc_add_series(name = "Accidents", data = summary_data_07$percentage) |>
+  hc_legend(enabled = FALSE)
+
+```
+
+# Column {width="50%"}
+
+```{r}
+#| title: Intersection
+
+# datatable
+cars_data |>
+  group_by(collision_neighborhd, collision_direction, accident_location) |>
+  summarise(accidents = n(), .groups = "drop") |>
+  kable("html") |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) |>
+  column_spec(1, bold = TRUE)
+
+```
+
+# Collision Occarance
+
+```{r}
+#| label: collision-occurance-values
+#| results: hide
+
+summary_data_08 <- cars_data |>
+  filter(year!=2017) |>
+  group_by(year, month) |>
+  summarise(accidents = n(), .groups = "drop") |>
+  pivot_wider(
+    names_from = year,
+    values_from = accidents
+  )
+
+summary_data_09 <- cars_data |>
+  filter(year != 2017, !is.na(time_occu)) |>  # Filter out 2017 and NA in time
+  group_by(day, time_occu) |>
+  summarise(accidents = n(), .groups = "drop")  |>
+  mutate(
+    time_occu = as.character(time_occu),
+    time_occu = str_pad(time_occu, width = 4, pad = "0"),
+    hour = as.numeric(time_occu) / 100,
+    day_index = as.numeric(factor(day, levels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"))) - 1
+  ) |>
+  filter(!is.na(hour))
+
+```
+
+## Row {height="40%"}
+
+```{r}
+#| title: Accidents Over Time
+
+# Convert month column to character to prevent highcharter from treating it as a timestamp
+summary_data_08$month <- as.character(summary_data_08$month)
+
+# Create the highchart object
+month_chart <- highchart() |>
+  hc_chart(type = "line") |>
+  hc_title(text = "") |>
+  hc_xAxis(categories = summary_data_08$month) |>
+  hc_yAxis(title = list(text = "Accidents"))
+
+# Add series for each year
+for (i in 2:ncol(summary_data_08)) {  # Start from the second column, assuming the first column is `month`
+  month_chart <- month_chart |> hc_add_series(
+    name = names(summary_data_08)[i],  # Use the column name as the series name
+    data = summary_data_08[[i]],  # Use the column data as series data
+    dashStyle = "Dash"  # Set the line style to dashed
+  )
+}
+
+# Print the chart
+month_chart
+
+```
+
+## Row {height="40%"}
+
+```{r}
+#| title: Collision by Day and Hour
+# Define colors for the heatmap
+colors <- c("#FFFFFF", "#3070B3", "#FFA07A", "#FF4500")
+
+# Create the heatmap
+highchart() |>
+  hc_chart(type = "heatmap", zoomType = "xy") |>
+  hc_xAxis(categories = formatC(0:23, width = 2, format = "d", flag = "0"), title = NULL) |>
+  hc_yAxis(categories = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"), title = NULL, reversed = TRUE) |>
+  hc_colorAxis(min = 0, stops = color_stops(colors = colors)) |>
+  hc_legend(align = "right", layout = "vertical", margin = 0, verticalAlign = "top", y = 25, symbolHeight = 280) |>
+  hc_add_series(
+    data = summary_data_09 |> 
+      mutate(x = hour, y = day_index, value = accidents) |> 
+      select(x, y, value) |> 
+      list_parse(),
+    name = "Accidents",
+    borderWidth = 0.5,
+    borderColor = '#FFFFFF'
+  ) |>
+  hc_tooltip(
+    useHTML = TRUE, 
+    headerFormat = '<b>{series.xAxis.categories[point.x]}:00 - {series.yAxis.categories[point.y]}</b><br>',
+    pointFormat = '<b>{point.value} accidents</b>'
+  )
+```
+
+# Location App
 ```{r}
 # Segment divisions based on accident categories
-fatal_accidents <- cars_data %>%
+fatal_accidents <- cars_data |>
   filter(!is.na(latitude), !is.na(longitude)) |>
   filter(offense_type == "Fatal Accidents")
 
-dui_accidents <- cars_data %>%
+dui_accidents <- cars_data |>
   filter(!is.na(latitude), !is.na(longitude)) |>
   filter(offense_type == "DUI Accidents")
 
-injury_accidents <- cars_data %>%
+injury_accidents <- cars_data |>
   filter(!is.na(latitude), !is.na(longitude)) |>
   filter(offense_type == "Injury Accidents")
 
-property_damage_accidents <- cars_data %>%
+property_damage_accidents <- cars_data |>
   filter(!is.na(latitude), !is.na(longitude)) |>
   filter(offense_type == "Property Damage Accidents")
 
-non_traffic_accidents <- cars_data %>%
+non_traffic_accidents <- cars_data |>
   filter(!is.na(latitude), !is.na(longitude)) |>
   filter(offense_type == "Non-Traffic Accidents")
 
-other_vehicle_accidents <- cars_data %>%
+other_vehicle_accidents <- cars_data |>
   filter(!is.na(latitude), !is.na(longitude)) |>
   filter(offense_type == "Other Vehicle Accidents")
 
 # Create leaflet map
-combined_map <- leaflet() %>%
+combined_map <- leaflet() |>
   addTiles()
 
 # Define the bounding box for Tucson
@@ -339,44 +783,44 @@ tucson_bounds <- list(
 )
 
 # Create leaflet map
-combined_map <- leaflet(options = leafletOptions(maxBounds = tucson_bounds))%>%
-  addTiles() %>%
+combined_map <- leaflet(options = leafletOptions(maxBounds = tucson_bounds))|>
+  addTiles() |>
   addMarkers(data = fatal_accidents, clusterOptions = markerClusterOptions(), 
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
-             lat = ~latitude) %>%
+             lat = ~latitude) |>
   addMarkers(data = dui_accidents, clusterOptions = markerClusterOptions(), 
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
-             lat = ~latitude) %>%
+             lat = ~latitude) |>
   addMarkers(data = injury_accidents, clusterOptions = markerClusterOptions(), 
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
-             lat = ~latitude) %>%
+             lat = ~latitude) |>
   addMarkers(data = property_damage_accidents, clusterOptions = markerClusterOptions(), 
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
-             lat = ~latitude) %>%
+             lat = ~latitude) |>
   addMarkers(data = non_traffic_accidents, clusterOptions = markerClusterOptions(), 
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
-             lat = ~latitude) %>%
+             lat = ~latitude) |>
   addMarkers(data = other_vehicle_accidents, clusterOptions = markerClusterOptions(), 
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
-             lat = ~latitude) %>%
+             lat = ~latitude) |>
  # Fit map to the bounding box for Tucson
   fitBounds(lng1 = tucson_bounds[[1]][[2]], lat1 = tucson_bounds[[1]][[1]], 
             lng2 = tucson_bounds[[2]][[2]], lat2 = tucson_bounds[[2]][[1]])
@@ -385,4 +829,3 @@ combined_map <- leaflet(options = leafletOptions(maxBounds = tucson_bounds))%>%
 combined_map
 
 ```
-# Collision Time
