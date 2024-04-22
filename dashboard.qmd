@@ -602,7 +602,9 @@ summary_data_07 <- cars_data |>
 
 ```
 
-## Row {height="50%"}
+## Column {width="50%"}
+
+### Row {height="50%"}
 
 ```{r}
 #| title: Division
@@ -621,7 +623,7 @@ highchart() |>
 
 ```
 
-## Row {height="50%"}
+### Row {height="50%"}
 
 ```{r}
 #| title: Ward
@@ -642,18 +644,17 @@ highchart() |>
 
 ```
 
-# Column {width="50%"}
+## Column {width="50%"}
 
 ```{r}
 #| title: Intersection
 
 # datatable
 cars_data |>
-  group_by(collision_neighborhd, collision_direction, accident_location) |>
+  group_by(collision_direction, accident_location) |>
   summarise(accidents = n(), .groups = "drop") |>
   kable("html") |>
-  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) |>
-  column_spec(1, bold = TRUE)
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) 
 
 ```
 
