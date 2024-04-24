@@ -186,7 +186,7 @@ data("penguins")
 
 -   It has been observed that women exhibit a higher employment rate.
 
-    ![Time series of collision](images/times.png)
+    ![](images/times.png)
 
 ## Times with higher Accident
 
@@ -224,7 +224,7 @@ data("penguins")
 -   50.2% of accidents without injury
 -   1.6% of accidents with fatal injury
 
-![](images/bar.png)
+![](images/bar.png){fig-align="center"}
 
 ## Collision Reason
 
@@ -234,10 +234,10 @@ The reasons
 :::
 
 ::: {.column width="60%"}
-![](images/pies.png){width="116mm"}
+![](images/pies.png){fig-align="right" width="116mm"}
 :::
 :::
 
 ## Thank You
 
-![Image credit: Danielle Navarro, Percolate.](images/watercolour_sys02_img34_teacup-ocean.png){fig-align="center" width="500"}
+![](images/thankyou.jpg){fig-align="center"}
