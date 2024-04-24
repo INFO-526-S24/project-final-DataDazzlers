@@ -186,7 +186,7 @@ data("penguins")
 
 -   It has been observed that women exhibit a higher employment rate.
 
-    ![](images/Screenshot 2024-04-24 at 12.07.05 PM.png)
+    ![Time series of collision](images/times.png)
 
 ## Times with higher Accident
 
@@ -194,7 +194,7 @@ data("penguins")
 
 -   Except of weekends, every day from 1pm to 6 pm most accidents happens
 
-    ![](images/Screenshot 2024-04-24 at 12.06.52 PM.png){width="240mm" height="62mm"}
+    ![](images/heat.png){width="643mm"}
 
 ## Question 2
 
@@ -224,7 +224,7 @@ data("penguins")
 -   50.2% of accidents without injury
 -   1.6% of accidents with fatal injury
 
-![](images/Screenshot 2024-04-24 at 12.15.07 PM.png){width="297mm"}
+![](images/bar.png)
 
 ## Collision Reason
 
@@ -234,7 +234,7 @@ The reasons
 :::
 
 ::: {.column width="60%"}
-![](images/Screenshot 2024-04-24 at 1.35.29 PM.png){width="150mm" height="150mm"}
+![](images/pies.png){width="116mm"}
 :::
 :::
 
