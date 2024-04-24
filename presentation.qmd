@@ -29,8 +29,18 @@ pacman::p_load(
   tidyverse,
   dlookr,
   kableExtra,
-  DT
+  reader,
+  scales,
+  gt,
+  DT,
+  janitor,
+  stringer,
+  leaflet,
+  highcharter,
+  waffle,
+  htmlwidgets
   )
+
 
 ```
 
@@ -52,9 +62,81 @@ knitr::opts_chunk$set(
 
 ```{r}
 #| label: load-data
-#| include: false
-# Load data here
-crash_data <- read.csv("data/tucson_data.csv")
+#| message: false
+#| echo: false
+#| results: hide
+
+boolan_tranform <- function(vector) {
+  result <- ifelse(vector == 1, "Yes", "No")
+  return(result)
+}
+
+cars_data <- read.csv("data/tucson_data.csv") |>
+  clean_names() |>
+  mutate(
+    collision_date  = format(ymd_hms(collision_date), "%m/%d/%Y"), # Clean date type
+    year = year_occu,
+    month = month_abbr,
+    hour = ifelse(time_occu == 0,"12:00 AM",
+               ifelse(nchar(as.character(time_occu)) == 3,
+                      paste0(substr(as.character(time_occu), 1, 1), ":", ... =
+                               substr(as.character(time_occu), 2, 3), " AM"),
+                      format(strptime(as.character(time_occu), 
+                                      format = "%H%M", tz = "UTC"), 
+                             format = "%I:%M %p"))),
+    weekday = if_else(day %in% c("Saturday", "Sunday"), "Weekend", "Weekday"),
+    offense_desc = if_else(str_detect(offense_desc, "^\\s*$"), "Unknown", offense_desc),
+    offense_desc_main = str_split_fixed(offense_desc, ":", n = 2)[, 1],
+    offense_desc_sub = if_else(str_detect(
+                    str_split_fixed(offense_desc, ":", n = 2)[, 2], "^\\s*$"),
+                    "Other", 
+                    str_split_fixed(offense_desc, ":", n = 2)[, 2]),
+    offense_type = case_when(
+          str_detect(offense_desc_main, "Fatal") ~ "Fatal Accidents",
+          str_detect(offense_desc_main, "Injury") ~ "Injury Accidents",
+          str_detect(offense_desc_main, "Property Damage") ~ "Property Damage Accidents",
+          str_detect(offense_desc_main, "Driving Under the Influence") ~ "DUI Accidents",
+          str_detect(offense_desc_main, "Non-Traffic") ~ "Non-Traffic Accidents",
+          str_detect(offense_desc_main, "Other") ~ "Other Vehicle Accidents",
+          TRUE ~ "Miscellaneous Accidents"
+          ),
+    collision_type = if_else(str_detect(collision_type, "^\\s*$"),
+                             "Unknown", collision_type),
+    in_out_vehicle = case_when(
+      grepl("Pedestrian|Bicycle|Parked_Unit|Single Pedestrian", 
+          collision_type, ignore.case = TRUE) ~ "Out of Vehicle",
+      grepl("Vehicle|Motorcycle|Bus|Train", 
+            collision_type, ignore.case = TRUE) ~ "In Vehicle",
+    TRUE ~ "Unknown"),
+    distance = if_else(str_detect(distance, "^\\s*$"), "Unknown", distance),
+    traffic_control_device = boolan_tranform(traffic_control_device),
+    work_zone = boolan_tranform(work_zone),
+    violation_too_close = boolan_tranform(violation_too_close),
+    violation_traffic_control_device = boolan_tranform(violation_traffic_control_device),
+    violation_turning = boolan_tranform(violation_turning),
+    violation_wrong_way = boolan_tranform(violation_wrong_way),
+    violation_lane = boolan_tranform(violation_lane),
+    violation_crosswalk = boolan_tranform(violation_crosswalk),
+    violation_failure_to_yield = boolan_tranform(violation_failure_to_yield),
+    violation_aggressive_driving = boolan_tranform(violation_aggressive_driving),
+    collision_neighborhd = if_else(str_detect(collision_neighborhd, "^\\s*$"),
+                                   "Uknw", collision_neighborhd), 
+    collision_direction = if_else(str_detect(collision_direction, "^\\s*$"),
+                                  "Unknown", collision_direction), 
+    accident_location = if_else(str_detect(accident_location, "^\\s*$"),
+                                "Unknown", accident_location)
+    ) |>
+  select(accident_id, collision_date, year, month, day, weekday, hour, time_occu,
+         offense_desc_main, offense_desc_sub,offense_type, injury_severity,
+         collision_type, collision_manner, division, distance, hitand_run,
+         pedestrian, fatal_collision, intersection_related, traffic_control_device,
+         work_zone, violation_speed, total_injuries, latitude, longitude, 
+         violation_too_close, violation_traffic_control_device,violation_turning,
+         violation_wrong_way, violation_lane, violation_crosswalk, ward,
+         violation_failure_to_yield, violation_aggressive_driving, operator_impaired,
+         operator_distracted, x_coordinate, y_coordinate, total_fatalities,
+         collision_neighborhd, collision_direction, accident_location,
+         intersection_related, in_out_vehicle) 
 
 data("penguins")
 ```
@@ -96,6 +178,24 @@ data("penguins")
     -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
 :::
 
+## Time series of Accidents
+
+-   This plots show time series of Accident over months for each year.
+
+-   During summer the number of accident decreases.
+
+-   It has been observed that women exhibit a higher employment rate.
+
+    ![](images/Screenshot 2024-04-24 at 12.07.05 PM.png)
+
+## Times with higher Accident
+
+-   This plots show heat map of number of accidents in each hour of everyday in a week.
+
+-   Except of weekends, every day from 1pm to 6 pm most accidents happens
+
+    ![](images/Screenshot 2024-04-24 at 12.06.52 PM.png){width="240mm" height="62mm"}
+
 ## Question 2
 
 ::: incremental
@@ -119,21 +219,24 @@ data("penguins")
     -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
 :::
 
+## Collision Severity  
+
+-   50.2% of accidents without injury
+-   1.6% of accidents with fatal injury
+
+![](images/Screenshot 2024-04-24 at 12.15.07 PM.png){width="297mm"}
+
+## Collision Reason
+
 ::: columns
-::: {.increment width="50%"}
--   Some text
-
--   goes here
+::: {.column width="40%"}
+The reasons
 :::
 
-::: {.column width="50%"}
-```{r, warning=FALSE, fig.width=5.5}
-
-```
+::: {.column width="60%"}
+![](images/Screenshot 2024-04-24 at 1.35.29 PM.png){width="150mm" height="150mm"}
 :::
 :::
-
-## CONCLUSION
 
 ## Thank You
 
