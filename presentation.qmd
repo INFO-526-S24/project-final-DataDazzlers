@@ -1,7 +1,8 @@
 ---
-title: "Accidents Crash Analysis"
+title: "Tucson Car Collision Analysis"
 subtitle: "INFO 526 - Fall 2023 - Project Final"
-author: "Data Dazzlers"
+author:
+ - name: "**Data Dazzlers**: <br> Sanja Dmitrovic, Jiayue He, Vidhyananth Sivashanmugam,<br> Naitik Shah, Varun Soni, Mohammad Ali Farmani" 
 title-slide-attributes:
   data-background-image: images/watercolour_sys02_img34_teacup-ocean.jpg
   data-background-size: stretch
@@ -16,13 +17,20 @@ execute:
   echo: false
 ---
 
-```{r}
-#| label: load-packages
-#| include: false
+```{r, warning=FALSE, message=FALSE}
+#| label: load-pkgs
+#| message: false
+#| include: false 
 
-# Load packages here
-pacman::p_load(tidymodels,
-               tidyverse)
+if(!require(pacman))
+  install.packages("pacman")
+
+pacman::p_load(
+  tidyverse,
+  dlookr,
+  kableExtra,
+  DT
+  )
 
 ```
 
@@ -46,64 +54,73 @@ knitr::opts_chunk$set(
 #| label: load-data
 #| include: false
 # Load data here
-data(mtcars)
-mtcars$speed <- mtcars$hp / mtcars$wt
+crash_data <- read.csv("data/tucson_data.csv")
 
 data("penguins")
 ```
 
-# Using Quarto for presentations
+## Introduction
 
-## Quarto
+::: incremental
+-   The primary goal of the project is to develop a user-friendly visualization tool that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
 
--   The presentation is created using the Quarto CLI
+-   **GIS Data from the City of Tucson** - This dataset contains publicly-available records of vehicle collisions from the Tucson Police Department, covering the period from March 2022 to the present.
 
--   `##` sets the start of a new slide
+-   Key variables in this dataset include: Date of collision, Injury severity, Manner of collision, Fatality status
+:::
 
-## Layouts
+## Question 1
 
-You can use plain text
+::: incremental
+::: {.incremental width="40%"}
+-   Does day of the week and/or time of day affect severity and the number of accidents?
+
+-   Key variables to use:
+
+    -   TimeOccu (time at which accident occurred)
+    -   Day (day of week accident occurred)
+    -   InjurySeverity (how serious the injury caused by accident was)
+
+-   ::: incremental
+    These variables may help us explore why certain days of the weeks or times of day lead to more accidents.
+    :::
+:::
+:::
+
+## Approach
+
+::: incremental
+-   Development of Interactive Visualizations :
+    -   Utilize R Shiny for the creation of an interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
+    -   Implement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson using the latitude and longitude coordinates in the dataset.
+    -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
+:::
+
+## Question 2
+
+::: incremental
+-   What is the relationship between the type of violation and if the accident resulted in a fatality?
+
+-   Key variables to use:
+
+    -   FatalCollision
+    -   TotalFatalities
+
+-   We will create a series of stacked bar plots that show the number of accidents based the type of violation. Pie charts may be included to provide a high-level summary of the percentage of crashes per violation type.
+:::
+
+## Approach for Question 2
+
+::: incremental
+-   Same as the first question:
+
+    -   Utilize R Shiny for the creation of an interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
+    -   Implement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson using the latitude and longitude coordinates in the dataset.
+    -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
+:::
 
 ::: columns
-::: {.column width="40%"}
--   or bullet points[^1]
-:::
-
-::: {.column width="60%"}
-or in two columns
-:::
-:::
-
-[^1]: And add footnotes
-
--   like
-
--   this
-
-## Code
-
-```{r, echo=FALSE}
-model <- lm(mpg ~ speed, data = mtcars) 
-
-model |> tidy()
-
-model |> glance()
-
-```
-
-## Plots
-
-```{r}
-penguins |>
-  mutate(species = ifelse(species == "Adelie", "Adelie", "Other")) |>
-  ggplot(aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
-  geom_point()
-```
-
-## Plot and text
-
-::: columns
-::: {.column width="50%"}
+::: {.increment width="50%"}
 -   Some text
 
 -   goes here
@@ -111,55 +128,13 @@ penguins |>
 
 ::: {.column width="50%"}
 ```{r, warning=FALSE, fig.width=5.5}
-penguins |>
-  ggplot(aes(x = bill_length_mm, y = species, color = species)) +
-  geom_boxplot(linewidth = 0.75,
-               outlier.size = 2.5) +
-  theme_minimal(base_size = 15) +
-  theme(legend.key.size = unit(0.8, "cm"))
+
 ```
 :::
 :::
 
-# A new section...
+## CONCLUSION
 
-## Tables
-
-If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
-
-```{r}
-penguins |> 
-  head() |>
-  kableExtra::kable() |>
-  kableExtra::kable_styling()
-```
-
-## Images
+## Thank You
 
 ![Image credit: Danielle Navarro, Percolate.](images/watercolour_sys02_img34_teacup-ocean.png){fig-align="center" width="500"}
-
-## Math Expressions {.smaller}
-
-You can write LaTeX math expressions inside a pair of dollar signs, e.g. \$\\alpha+\\beta\$ renders $\alpha + \beta$. You can use the display style with double dollar signs:
-
-```         
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-```
-
-$$
-\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i
-$$
-
-Limitations:
-
-1.  The source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting `$$` must appear in the very beginning of a line, followed immediately by a non-space character, and the ending `$$` must be at the end of a line, led by a non-space character;
-
-2.  There should not be spaces after the opening `$` or before the closing `$`.
-
-# Wrap up
-
-## Feeling adventurous?
-
--   You are welcomed to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
-
--   But some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs.

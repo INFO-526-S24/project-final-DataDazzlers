@@ -3,6 +3,8 @@ format: dashboard
 # theme: [sandstone, data/custom.scss]
 editor_options: 
   chunk_output_type: console
+execute:
+  echo: false
 ---
 
 ```{r}
