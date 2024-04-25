@@ -17,81 +17,167 @@ execute:
   echo: false
 ---
 
+```{r, warning=FALSE, message=FALSE}
+#| label: load-pkgs
+#| message: false
+#| include: false 
+
+if(!require(pacman))
+  install.packages("pacman")
+
+pacman::p_load(
+  tidyverse,
+  dlookr,
+  kableExtra,
+  reader,
+  scales,
+  gt,
+  DT,
+  janitor,
+  stringer,
+  leaflet,
+  highcharter,
+  waffle,
+  htmlwidgets
+  )
+
+```
+
+```{r}
+#| label: setup
+#| include: false
+
+# Plot theme
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 11))
+
+# For better figure resolution
+knitr::opts_chunk$set(
+  fig.retina = 3, 
+  dpi = 300, 
+  fig.width = 6, 
+  fig.asp = 0.618 
+  )
+```
+
 ## Abstract
 
 In this project, we look into the Tucson accident crash dataset. We aim to offer detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. So as to help various stakeholders, such as city planners, policy-makers, local residents, and fellow students, to improve road safety.
 
-## **Why this dataset?**
+## **Introduction**
 
-Choosing the Tucson accident crash dataset for project is a decision rooted in both relevance and practicality. As students at the University of Arizona, located in the heart of Tucson, this dataset offers a unique opportunity to study a subject that directly impacts the community. Analyzing traffic collision data within the city not only allows us to apply the theoretical knowledge we've gained in our data analysis courses but also provides insights into urban safety and transportation issues that affect peers and fellow residents. This project is not just an academic exercise; it's a chance to contribute to a safer, more informed Tucson.
+In response to the critical issue of road safety in Tucson and as students at the University of Arizona, located in the heart of Tucson, we propose to develop a dynamic and user-friendly dashboard that offers detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. We aspire to contribute to informed decision-making processes and the implementation of effective road safety measures.
 
-## **Objective**
+Analyzing traffic collision data within the city not only allows us to apply the theoretical knowledge we've gained in our data analysis courses but also provides insights into urban safety and transportation issues that affect peers and fellow residents. This project is not just an academic exercise; it's a chance to contribute to a safer, more informed Tucson.
 
-Our project's primary goal is to develop a dynamic and user-friendly tool that offers detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. By enabling various stakeholders, including city planners, policy-makers, local residents, and fellow students, to access and interact with our findings, we aspire to contribute to informed decision-making processes and the implementation of effective road safety measures.
+The project utilizes the comprehensive accident crash data set provided by the Tucson Police Department, [GIS Data from the City of Tucson](https://gisdata.tucsonaz.gov/datasets/tucson-police-collisions/explore "Dataset link"), which displays Tucson Police's publicly-available records of vehicle collisions from March 2022 to the present. Variables in this dataset include date of collision, injury severity, manner of collision, if the collision was fatal, etc. A full list of these variables is provided below.
+
+```{r}
+#| label: load-data
+#| message: false
+#| echo: false
+#| results: hide
+
+boolan_tranform <- function(vector) {
+  result <- ifelse(vector == 1, "Yes", "No")
+  return(result)
+}
+
+cars_data <- read.csv("data/tucson_data.csv") |>
+  clean_names() |>
+  mutate(
+    collision_date  = format(ymd_hms(collision_date), "%m/%d/%Y"), # Clean date type
+    year = year_occu,
+    month = month_abbr,
+    hour = ifelse(time_occu == 0,"12:00 AM",
+               ifelse(nchar(as.character(time_occu)) == 3,
+                      paste0(substr(as.character(time_occu), 1, 1), ":", ... =
+                               substr(as.character(time_occu), 2, 3), " AM"),
+                      format(strptime(as.character(time_occu), 
+                                      format = "%H%M", tz = "UTC"), 
+                             format = "%I:%M %p"))),
+    weekday = if_else(day %in% c("Saturday", "Sunday"), "Weekend", "Weekday"),
+    offense_desc = if_else(str_detect(offense_desc, "^\\s*$"), "Unknown", offense_desc),
+    offense_desc_main = str_split_fixed(offense_desc, ":", n = 2)[, 1],
+    offense_desc_sub = if_else(str_detect(
+                    str_split_fixed(offense_desc, ":", n = 2)[, 2], "^\\s*$"),
+                    "Other", 
+                    str_split_fixed(offense_desc, ":", n = 2)[, 2]),
+    offense_type = case_when(
+          str_detect(offense_desc_main, "Fatal") ~ "Fatal Accidents",
+          str_detect(offense_desc_main, "Injury") ~ "Injury Accidents",
+          str_detect(offense_desc_main, "Property Damage") ~ "Property Damage Accidents",
+          str_detect(offense_desc_main, "Driving Under the Influence") ~ "DUI Accidents",
+          str_detect(offense_desc_main, "Non-Traffic") ~ "Non-Traffic Accidents",
+          str_detect(offense_desc_main, "Other") ~ "Other Vehicle Accidents",
+          TRUE ~ "Miscellaneous Accidents"
+          ),
+    collision_type = if_else(str_detect(collision_type, "^\\s*$"),
+                             "Unknown", collision_type),
+    in_out_vehicle = case_when(
+      grepl("Pedestrian|Bicycle|Parked_Unit|Single Pedestrian", 
+          collision_type, ignore.case = TRUE) ~ "Out of Vehicle",
+      grepl("Vehicle|Motorcycle|Bus|Train", 
+            collision_type, ignore.case = TRUE) ~ "In Vehicle",
+    TRUE ~ "Unknown"),
+    distance = if_else(str_detect(distance, "^\\s*$"), "Unknown", distance),
+    traffic_control_device = boolan_tranform(traffic_control_device),
+    work_zone = boolan_tranform(work_zone),
+    violation_too_close = boolan_tranform(violation_too_close),
+    violation_traffic_control_device = boolan_tranform(violation_traffic_control_device),
+    violation_turning = boolan_tranform(violation_turning),
+    violation_wrong_way = boolan_tranform(violation_wrong_way),
+    violation_lane = boolan_tranform(violation_lane),
+    violation_crosswalk = boolan_tranform(violation_crosswalk),
+    violation_failure_to_yield = boolan_tranform(violation_failure_to_yield),
+    violation_aggressive_driving = boolan_tranform(violation_aggressive_driving),
+    collision_neighborhd = if_else(str_detect(collision_neighborhd, "^\\s*$"),
+                                   "Uknw", collision_neighborhd), 
+    collision_direction = if_else(str_detect(collision_direction, "^\\s*$"),
+                                  "Unknown", collision_direction), 
+    accident_location = if_else(str_detect(accident_location, "^\\s*$"),
+                                "Unknown", accident_location)
+    ) |>
+  select(accident_id, collision_date, year, month, day, weekday, hour, time_occu,
+         offense_desc_main, offense_desc_sub,offense_type, injury_severity,
+         collision_type, collision_manner, division, distance, hitand_run,
+         pedestrian, fatal_collision, intersection_related, traffic_control_device,
+         work_zone, violation_speed, total_injuries, latitude, longitude, 
+         violation_too_close, violation_traffic_control_device,violation_turning,
+         violation_wrong_way, violation_lane, violation_crosswalk, ward,
+         violation_failure_to_yield, violation_aggressive_driving, operator_impaired,
+         operator_distracted, x_coordinate, y_coordinate, total_fatalities,
+         collision_neighborhd, collision_direction, accident_location,
+         intersection_related, in_out_vehicle) 
+
+data("penguins")
+```
 
 ## **Overall Project Plan**
 
-1.  Data Preparation and Analysis :
-    -   Begin with a thorough cleaning and pre-processing of the Tucson accident crash dataset to ensure accuracy and usability.
-    -   Conduct a comprehensive analysis focusing on temporal trends (time of day, day of the week, months), spatial distribution (accident hotspots), and accident severity (fatalities, injuries).
-2.  Development of Interactive Visualizations :
-    -   Utilize R Shiny for the creation of an interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
-    -   Implement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson using the latitude and longitude coordinates in the dataset.
-    -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
-3.  Accessibility and User Experience :
-    -   Design the dashboard with a focus on accessibility, ensuring that our visualizations are informative and usable for all.
-    -   Incorporate user-friendly features, such as slicer to highlight key insights and facilitate understanding.
-4.  Outreach and Impact :
-    -   Plan to present our findings to local authorities and community groups to foster discussions on improving road safety.
-    -   Publish our interactive dashboard online, making it accessible to the public for educational and awareness purposes.
+In the progress of finishing the project, we follows steps including:
 
-## **Analysis Plan**
+1.  Data Preparation and Analysis
 
-The primary objective of our project is to delve deep into the Tucson accident crash dataset to uncover underlying patterns and factors contributing to road accidents within Tucson. By leveraging the extensive data provided by the Tucson Police Department, we aim to analyze how various dimensions such as day, time, injury severity, number of fatalities, and type of violation are all related to each other.
+2.  Development of Interactive Visualizations
 
-The two specific questions we aim to answer are:
+3.  Accessibility and User Experience
+
+4.  Outreach and Impact
+
+## Project Questions
+
+Specially, we focused on two main questions:
+
+1.  Does day of the week and/or time of day affect severity and the number of accidents?
+2.  What is the relationship between the type of violation (e.g., failure to yield, aggressive driving) and if the accident resulted in a fatality?
 
 ### Question 1
 
-Members: Sanja Dmitrovic, Jiayue He, Vidhyananth Sivashanmugam
-
 Does day of the week and/or time of day affect severity and the number of accidents?
-
-Variables to use:
-
--   TimeOccu (time at which accident occurred)
-
--   Day (day of week accident occurred)
-
--   InjurySeverity (how serious the injury caused by accident was)
-
-Some additional variables may be used such as:
-
--   OperatorImpaired (if the operator was impaired due to substances or other reasons)
-
--   OperatorDistracted (if the operator was distracted)
-
-These variables may help us explore why certain days of the weeks or times of day lead to more accidents. For example, our hypothesis is that weekend nights would lead to more accidents due to more usage of drugs and alcohol by the driver. This factors could also explain why some accidents are more severe than others.
-
-Plots to create: To answer this question, we plan to create daily and hourly time series plots to easily observe trends in accident frequency and injury severity. In the Shiny app, there can be a time series bar where the user drags the button and the plot shows the different numbers of accidents in different hours in a day and days in the week.
 
 ### Question 2
 
-Members: Naitik Shah, Varun Soni, Mohammad Ali Farmani
-
 What is the relationship between the type of violation (e.g., failure to yield, aggressive driving) and if the accident resulted in a fatality?
-
-Variables to use:
-
--   FatalCollision (yes or no if accident resulted in fatality or not)
-
--   TotalFatalities (number of fatalities reported as an integer)
-
--   All Violation variables which report yes or no (i.e., ViolationSpeed, ViolationTooClose, ViolationTrafficControlDevice, ViolationTurning, ViolationWrongWay, ViolationLane, ViolationFailuretoYield, ViolationCrosswalk, ViolationAggressiveDriving).
-
-Plots to create: For the Shiny app, we will create a series of stacked bar plots that show the number of accidents based the type of violation. Pie charts may be included to provide a high-level summary of the percentage of crashes per violation type.
-
-In the end, we aim for the user to hover over various areas in Tucson and see the time series plots and bar plots that give insights to the questions posed above.
 
 ## **Conclusion**
 
