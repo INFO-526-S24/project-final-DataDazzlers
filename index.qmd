@@ -310,15 +310,21 @@ Analysis: Based on the plot, we found that during the week, time period from 13:
 ```{r}
 #| title: Accidents Over Time
 
-# Convert month column to character to prevent highcharter from treating it as a timestamp
-summary_data_08$month <- as.character(summary_data_08$month)
+months_ordered <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
-# Create the highchart object
+# Ensure that the month column is a factor with levels in the correct order
+summary_data_08$month <- factor(summary_data_08$month, levels = months_ordered)
+
+# Sort the data frame by month
+summary_data_08 <- summary_data_08[order(summary_data_08$month), ]
+
+# Now create the highchart object as before, it should now have the x-axis in the correct order
 month_chart <- highchart() |>
   hc_chart(type = "line") |>
   hc_title(text = "") |>
-  hc_xAxis(categories = summary_data_08$month) |>
+  hc_xAxis(categories = months_ordered) |>
   hc_yAxis(title = list(text = "Accidents"))
+
 
 # Add series for each year
 for (i in 2:ncol(summary_data_08)) {  # Start from the second column, assuming the first column is `month`
@@ -334,7 +340,8 @@ month_chart
 
 ```
 
-Analysis: Based on the line plot, we noticed that 
+Analysis: Based on the line plot, we noticed that on average, Jun and July have comparatively lowest accident rate, while more accidents happen in Oct and Apr. Probably it is because of the holiday as Halloween and Spring Break of some Universities. We also noticed that in 2020, Apr had the lowest accident rate, we conclude it is due to that Apr 2020 was the first "shutdown" month during COVID-19 in the USA. 
+
 ### Question 2
 
 What is the relationship between the type of violation (e.g., failure to yield, aggressive driving) and if the accident resulted in a fatality?
