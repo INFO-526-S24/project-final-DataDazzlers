@@ -38,7 +38,8 @@ pacman::p_load(
   leaflet,
   highcharter,
   waffle,
-  htmlwidgets
+  htmlwidgets,
+  palmerpenguins
   )
 
 
@@ -219,7 +220,7 @@ data("penguins")
     -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
 :::
 
-## Collision Severity  
+## Collision Severity
 
 -   50.2% of accidents without injury
 -   1.6% of accidents with fatal injury
