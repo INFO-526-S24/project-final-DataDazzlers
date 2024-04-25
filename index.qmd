@@ -1,8 +1,8 @@
 ---
-title: "Project Title"
+title: "Tucson Car Collision Analysis"
 subtitle: "INFO 526 - Project Final"
 author: 
-  - name: "Data Dazzlers"
+  - name: "Data Dazzlers: Sanja Dmitrovic, Jiayue He, Vidhyananth Sivashanmugam,Naitik Shah, Varun Soni, Mohammad Ali Farmani" 
     affiliations:
       - name: "School of Information, University of Arizona"
 description: "Project description"
@@ -18,6 +18,8 @@ execute:
 ---
 
 ## Abstract
+
+In this project, we look into the Tucson accident crash dataset. We aim to offer detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. So as to help various stakeholders, such as city planners, policy-makers, local residents, and fellow students, to improve road safety.
 
 ## **Why this dataset?**
 
