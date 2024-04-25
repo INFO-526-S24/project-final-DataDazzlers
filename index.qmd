@@ -55,7 +55,7 @@ ggplot2::theme_set(ggplot2::theme_minimal(base_size = 11))
 knitr::opts_chunk$set(
   fig.retina = 3, 
   dpi = 300, 
-  fig.width = 6, 
+  fig.width = 8, 
   fig.asp = 0.618 
   )
 ```
@@ -346,36 +346,7 @@ Analysis: Based on the line plot, we noticed that on average, Jun and July have 
 
 What is the relationship between the type of violation (e.g., failure to yield, aggressive driving) and if the accident resulted in a fatality?
 
-
-```{r}
-#| title: Annual Car Collision
-
-n_accidents <- nrow(cars_data)
-n_injuries <- sum(cars_data$total_injuries, na.rm = TRUE)
-n_fatalities <- sum(cars_data$total_fatalities, na.rm = TRUE)
-injury_rate <- nrow(cars_data |> filter(total_injuries > 0)) / n_accidents
-fatal_rate <- nrow(cars_data |> filter(fatal_collision == "Yes")) / n_accidents
-
-
-summary_data_01 |>
-hchart("line", hcaes(x = year, y = count, group = metric)) |>
-  hc_xAxis(title = list(text = "Year"), labels = list(rotation = 0)) |>
-  hc_yAxis(title = list(text = "Total Count")) |>
-  hc_legend(
-    enabled = TRUE,
-    align = 'center',
-    verticalAlign = 'bottom',
-    layout = 'horizontal'
-  ) |>
-  hc_colors(c("green", "red", "blue")) |>
-  hc_plotOptions(
-    series = list(
-      marker = list(enabled = FALSE)
-    )
-  ) |>
-  hc_add_theme(hc_theme_smpl()) |>
-  hc_exporting(enabled = FALSE)
-```
+Approach:
 
 
 ```{r}
@@ -441,61 +412,6 @@ highchart() |>
 ```
 
 
-
-```{r}
-#| title: Injuries
-
-highchart() |>
-  hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
-  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
-  hc_plotOptions(pie = list(pointPadding = 0.04,
-                            groupPadding = 0.04,
-                            innerSize = '50%',  # Creates the donuts hole
-                            startAngle = 0,
-                            endAngle = 360,
-                            dataLabels = list(enabled = TRUE, 
-                                              format = '{point.name}: {point.percentage:.1f}%')
-                          )) |>
-  hc_legend(enabled = FALSE) |>
-  hc_add_series(
-    name = "Total",
-    data = list_parse2(
-       cars_data |>
-        filter(!is.na(total_injuries) & total_injuries > 0) |>
-        group_by(in_out_vehicle) |>
-        summarise(total_accidents = n())
-    )
-  )
-```
-
-```{r}
-#| title: Fatalities
-
-highchart() |>
-  hc_chart(type = "pie", plotBackgroundColor = NULL, plotBorderWidth = NULL, plotShadow = FALSE) |>
-  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
-  hc_plotOptions(pie = list(pointPadding = 0.04,
-                            groupPadding = 0.04,
-                            innerSize = '50%',  # Creates the donuts hole
-                            startAngle = 0,
-                            endAngle = 360,
-                            dataLabels = list(enabled = TRUE, 
-                                              format = '{point.name}: {point.percentage:.1f}%')
-                          )) |>
-  hc_legend(enabled = FALSE) |>
-  hc_add_series(
-    name = "Total",
-    data = list_parse2(
-       cars_data |>
-        filter(fatal_collision =="Yes") |>
-        group_by(in_out_vehicle) |>
-        summarise(total_accidents = n())
-    )
-  )
-
-```
-
-
 ```{r}
 #| title: Fatal Collision
 
@@ -515,24 +431,6 @@ highchart() |>
 
 ```
 
-```{r}
-#| title: Ward
-
-highchart() |>
-  hc_chart(type = "column") |>
-  hc_xAxis(categories = summary_data_07$ward,
-           title = list(text = "Year"), 
-           labels = list(enabled = TRUE)) |>
-  hc_yAxis(title = list(text = "Fatalities")) |>
-  hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
-  hc_plotOptions(column = list(pointPadding = 0.04,
-                            groupPadding = 0.04,
-                            dataLabels = list(enabled = TRUE, 
-                                              format = "{point.y:.1f}%"))) |>
-  hc_add_series(name = "Accidents", data = summary_data_07$percentage) |>
-  hc_legend(enabled = FALSE)
-
-```
 
 
 ## **Conclusion**
