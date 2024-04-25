@@ -230,7 +230,11 @@ data("penguins")
 
 ::: columns
 ::: {.column width="40%"}
-The reasons
+-   74.4% of collisions involve Intersection
+
+-   38.1% of collisions involve Distracted Driver
+
+-   Intersections are the most dangerous locations
 :::
 
 ::: {.column width="60%"}
