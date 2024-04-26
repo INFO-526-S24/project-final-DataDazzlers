@@ -550,9 +550,7 @@ cars_data |>
     wrong_way = sum(violation_wrong_way == "Yes", na.rm = TRUE),
     turning = sum(violation_turning == "Yes", na.rm = TRUE),
     traffic_control = sum(violation_traffic_control_device == "Yes", na.rm = TRUE),
-    crosswalk = sum(violation_crosswalk == "Yes", na.rm = TRUE),
-    .groups = "drop"
-  ) |>
+    crosswalk = sum(violation_crosswalk == "Yes", na.rm = TRUE), .groups = "drop" ) |>
   pivot_longer(
     cols = c(speed, too_close, aggressive_driving, failure_to_yield, wrong_way, turning, traffic_control, crosswalk),
     names_to = "metric",
@@ -576,7 +574,6 @@ cars_data |>
   ) |>
   hc_xAxis(
     title = NULL,
-    categories = unique(.$year),
     labels = list(
       rotation = 0,
       style = list(fontSize = "12px")
@@ -638,7 +635,6 @@ cars_data |>
   ) |>
   hc_xAxis(
     title = NULL,
-    categories = unique(.$year), # Use unique years as categories
     labels = list(
       rotation = 0, # Rotate x-axis labels
       style = list(fontSize = "12px") # Adjust font size
@@ -700,7 +696,6 @@ cars_data |>
     )
   ) |>
   hc_xAxis(
-    categories = unique(.$year), # Use unique years as categories
     labels = list(
       rotation = 0, # Rotate x-axis labels
       style = list(fontSize = "12px") # Adjust font size
