@@ -14,10 +14,10 @@ website:
         href: proposal.qmd
       - text: Presentation
         href: presentation.qmd
-      - text: Dashboard
-        href: dashboard.qmd
       - text: About
         href: about.qmd
+      - text: Dashboard
+        href: dashboard.qmd
 
 format:
   html:
@@ -26,6 +26,6 @@ format:
       light: flatly
       dark: darkly
     toc: true
-
+engine: knitr
 execute:
   freeze: auto
