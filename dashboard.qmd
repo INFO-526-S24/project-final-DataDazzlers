@@ -506,7 +506,7 @@ cars_data |>
   mutate(percentage = (total_count / sum(total_count)) * 100) |>
   arrange(desc(percentage)) |>
   hchart("column", hcaes(x = injury_severity, y = percentage)) |>
-  hc_title(text = "Collsions By Injuriy Severity", align = "center") |>
+  hc_title(text = "Collisions By Injuriy Severity", align = "center") |>
   hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
   hc_xAxis(title = NULL, labels = list(enabled = TRUE)) |>
   hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, format = '{point.y:.1f}%'),
@@ -525,7 +525,7 @@ cars_data |>
   mutate(percentage = (total_count / sum(total_count)) * 100) |>
   arrange(desc(percentage)) |>
   hchart("column", hcaes(x = offense_type, y = percentage)) |>
-  hc_title(text = "Collsions By Offense Type", align = "center") |>
+  hc_title(text = "Collisions By Offense Type", align = "center") |>
   hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
   hc_xAxis(title = NULL, labels = list(enabled = TRUE)) |>
   hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, format = '{point.y:.1f}%'),
@@ -745,7 +745,7 @@ cars_data |>
     values_to = "count"
   ) |>
   hchart("line", hcaes(x = year, y = count, group = metric)) |>
-  hc_title(text = "Car Collsions Trends (Yearly)", align = "center") |>
+  hc_title(text = "Car Collisions Trends (Yearly)", align = "center") |>
   hc_xAxis(title = NULL) |>
   hc_yAxis(title = list(text = "Count")) |>
   hc_legend(
@@ -788,7 +788,7 @@ cars_data |>
   ) |>
   arrange(month_no) |>
   hchart("line", hcaes(x = month, y = count, group = metric)) |>
-  hc_title(text = "Car Collsions Trends (Monthly)", align = "center") |>
+  hc_title(text = "Car Collisions Trends (Monthly)", align = "center") |>
   hc_xAxis(title = NULL) |>
   hc_yAxis(title = list(text = "Count")) |>
   hc_legend(
@@ -833,7 +833,7 @@ cars_data |>
   ) |>
   arrange(factor(day, levels = weekday_order)) |>
   hchart("line", hcaes(x = day, y = count, group = metric)) |>
-  hc_title(text = "Car Collsions Trends (Weekly)", align = "center") |>
+  hc_title(text = "Car Collisions Trends (Weekly)", align = "center") |>
   hc_xAxis(title = NULL) |>
   hc_yAxis(title = list(text = "Total Count")) |>
   hc_legend(
@@ -875,7 +875,7 @@ cars_data |>
   ) |>
   arrange(time_occu) |>
   hchart("line", hcaes(x = hour, y = count, group = metric)) |>
-  hc_title(text = "Collsions Trends (Hourly)", align = "center") |>
+  hc_title(text = "Collisions Trends (Hourly)", align = "center") |>
   hc_xAxis(title = NULL) |> 
   hc_yAxis(title = list(text = "Total Count")) |>
   hc_legend(
@@ -1223,7 +1223,7 @@ cars_data |>
   arrange(desc(count)) |>
   hchart("column", hcaes(x = division, y = count, group = metric)) |>
   hc_colors(c("#3498db", "#e74c3c", "#2ecc71")) |>
-  hc_title(text = "Car Collsions By Division", align = "center") |>
+  hc_title(text = "Car Collisions By Division", align = "center") |>
   hc_tooltip(
     pointFormat = "{point.name}:: <b>{point.y}</b>",
     formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")) |>
@@ -1262,7 +1262,7 @@ cars_data |>
   arrange(desc(count)) |>
   hchart("column", hcaes(x = ward, y = count, group = metric)) |>
   hc_colors(c("#3498db", "#e74c3c", "#2ecc71")) |>
-  hc_title(text = "Car Collsions By Ward", align = "center") |>
+  hc_title(text = "Car Collisions By Ward", align = "center") |>
   hc_tooltip(
     pointFormat = "{point.name}:: <b>{point.y}</b>",
     formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")) |>
@@ -1303,7 +1303,7 @@ cars_data |>
   head(15) |>
   hchart("column", hcaes(x = collision_neighborhd, y = count, group = metric)) |>
   hc_colors(c("#3498db", "#e74c3c", "#2ecc71")) |>
-  hc_title(text = "Car Collsions By Neighbourhood", align = "center") |>
+  hc_title(text = "Car Collisions By Neighbourhood", align = "center") |>
   hc_tooltip(
     pointFormat = "{point.name}:: <b>{point.y}</b>",
     formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")) |>
@@ -1344,7 +1344,7 @@ cars_data |>
   head(15) |>
   hchart("column", hcaes(x = accident_location, y = count, group = metric)) |>
   hc_colors(c("#3498db", "#e74c3c", "#2ecc71")) |>
-  hc_title(text = "Car Collsions By Location", align = "center") |>
+  hc_title(text = "Car Collisions By Location", align = "center") |>
   hc_tooltip(
     pointFormat = "{point.name}:: <b>{point.y}</b>",
     formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")) |>
