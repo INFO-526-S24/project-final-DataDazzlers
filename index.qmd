@@ -227,6 +227,20 @@ summary_data_04 <- cars_data |>
 ```
 
 ```{r}
+#| label: collision-manner
+#| results: hide
+#| 
+summary_data_05 <- cars_data |>
+  group_by(collision_manner) |>
+  summarise(accidents = n(), .groups = "drop") |>
+  mutate(collision_manner = stringr::str_wrap(collision_manner, width = 10),
+         accidents = accidents/1000) |>
+  arrange(desc(accidents)) |>
+  filter(collision_manner!="")
+
+```
+
+```{r}
 #| label: collision-location-values
 #| results: hide
 
@@ -271,6 +285,21 @@ summary_data_09 <- cars_data |>
 
 ```
 
+```{r}
+#| label: collision Type and Injury Serverity
+#| results: hide
+
+summary_data_10 <- cars_data |>
+  group_by(collision_manner,injury_severity ) |>
+  summarise(accidents = n(), total_count = n(), .groups = "drop") |>
+  mutate(percentage = (total_count / sum(total_count)) * 100)|>
+arrange(desc(accidents)) |>
+  filter(collision_manner!="")
+summary_data_10
+```
+
+
+
 ### Question 1
 
 Does day of the week and/or time of day affect severity and the number of accidents?
@@ -304,8 +333,8 @@ highchart() |>
     pointFormat = '<b>{point.value} accidents</b>'
   )
 ```
-Analysis: Based on the plot, we found that during the week, time period from 13:30 to 18:30 more accident happens, one possible reason is that between this period of time, many parents would go out to pick up their children between 13:30 - 16:30. And during the period of 16:30 - 18:30 is the peak hour of people get off from the work. The second time period of more accident happens is between 6:30 to 8:30 which is also the peak hour when people go to the work. Therefore, drivers should be more careful during the peak hours, or if possible, people can also avoid getting out during the peak hours. 
 
+Analysis: Based on the plot, we found that during the week, time period from 13:30 to 18:30 more accident happens, one possible reason is that between this period of time, many parents would go out to pick up their children between 13:30 - 16:30. And during the period of 16:30 - 18:30 is the peak hour of people get off from the work. The second time period of more accident happens is between 6:30 to 8:30 which is also the peak hour when people go to the work. Therefore, drivers should be more careful during the peak hours, or if possible, people can also avoid getting out during the peak hours. 
 
 
 ```{r}
@@ -347,91 +376,58 @@ Analysis: Based on the line plot, we noticed that on average, Jun and July have 
 
 What is the relationship between the type of violation (e.g., failure to yield, aggressive driving) and if the accident resulted in a fatality?
 
-Approach:
-
+Approach: We use a heat map to see the relationship between the type of violation and the resulted injure inclduing the fatality injury. 
 
 ```{r}
-#| title: Accidents by Collision Manner (k)
 
-summary_data_05 <- cars_data |>
-  group_by(collision_manner) |>
-  summarise(accidents = n(), .groups = "drop") |>
-  mutate(collision_manner = stringr::str_wrap(collision_manner, width = 10),
-         accidents = accidents/1000) |>
-  arrange(desc(accidents)) |>
-  filter(collision_manner!="")
+#| title: Collision Type and Injury Serverity
 
-highchart() |>
-  hc_chart(type = "column") |>
-  hc_xAxis(
-    categories = summary_data_05$collision_manner, 
-    labels = list(
-      rotation = 0,
-      align = "center",
-      style = list(
-        whiteSpace = 'normal',
-        textOverflow = 'none',
-        width = '8px'
-      )
-    )
+# Filter out rows where collision_manner is 'Unknown' or 'Other'
+summary_data_10 <- summary_data_10 %>%
+  filter(!collision_manner %in% c("Unknown", "Other"))
+
+# First, ensure that the 'collision_manner' and 'injury_severity' columns are factors and get their levels
+summary_data_10$collision_manner <- factor(summary_data_10$collision_manner)
+summary_data_10$injury_severity <- factor(summary_data_10$injury_severity, levels = c("No Injury", "Non-Incapacitating Injury", "Possible Injury", "Unknown Injury", "Incapacitating Injury", "Fatal Injury"))
+
+
+# Define colors for the heatmap
+colors <- c("#FFFFFF", "#3070B3", "#FFA07A", "#FF4500")
+
+
+# Prepare the data for the heatmap
+heatmap_data <- summary_data_10 |>
+  mutate(
+    x = as.integer(collision_manner) - 1, # -1 because Highcharts is zero-indexed
+    y = as.integer(injury_severity) - 1,
+    value = total_count
   ) |>
-  hc_yAxis(title = list(text = "Number of Accidents (K)")) |>
-  hc_tooltip(pointFormat = "{series.name}: <b>{point.y}K</b>") |>
-  hc_plotOptions(column = list(
-    pointPadding = 0.02,
-    groupPadding = 0.02,
-    dataLabels = list(
-      enabled = TRUE,
-      format = "{y}K",
-      fontSize = '1px'
-    )
-  )) |>
+  select(x, y, value) |>
+  list_parse()
+
+# Create the heatmap
+highchart() |>
+  hc_chart(type = "heatmap", zoomType = "xy") |>
+  hc_title(text = "Collision Type and Injury Severity") |>
+  hc_xAxis(categories = levels(summary_data_10$collision_manner)) |>
+  hc_yAxis(categories = levels(summary_data_10$injury_severity), reversed = TRUE) |>
+  hc_colorAxis(min = 0, stops = color_stops(colors = colors)) |>
+  hc_legend(align = "right", layout = "vertical", margin = 0, verticalAlign = "top", y = 25, symbolHeight = 280) |>
   hc_add_series(
+    data = heatmap_data,
     name = "Accidents",
-    data = summary_data_05$accidents
+    borderWidth = 0.5,
+    borderColor = '#FFFFFF'
   ) |>
-  hc_legend(enabled = FALSE)
+  hc_tooltip(
+    useHTML = TRUE, 
+    headerFormat = '<b>{point.x} - {point.y}</b><br>',
+    pointFormat = '<b>{point.value} accidents</b>'
+  )
 
 ```
 
-```{r}
-#| title: Injury Severity
-
-highchart() |>
-  hc_chart(type = "bar", inverted = TRUE) |>
-  hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
-  hc_xAxis(categories = (summary_data_03 |>
-                           arrange(desc(percentage)))$injury_severity, 
-           labels = list(enabled = TRUE)) |>
-  hc_plotOptions(bar = list(pointPadding = 0.02,
-                            groupPadding = 0.02,
-                            dataLabels = list(enabled = TRUE, 
-                                              format = "{point.y:.1f}%"))) |>
-  hc_add_series(data = (summary_data_03 |>
-                          arrange(desc(percentage)))$percentage) |>
-  hc_legend(enabled = FALSE) 
-```
-
-
-```{r}
-#| title: Fatal Collision
-
-highchart() |>
-  hc_chart(type = "column") |>
-  hc_xAxis(categories = summary_data_04$year, 
-           title = list(text = "Year"), 
-           labels = list(enabled = TRUE)) |>
-  hc_yAxis(title = list(text = "Fatalities")) |>
-  hc_tooltip(pointFormat = "{series.name}: <b>{point.y}</b>") |>
-  hc_plotOptions(column = list(pointPadding = 0.04,
-                            groupPadding = 0.04,
-                            dataLabels = list(enabled = TRUE, 
-                                              format = "{point.y}"))) |>
-  hc_add_series(name = "Fatalities", data = summary_data_04$fatalities) |>
-  hc_legend(enabled = FALSE)
-
-```
-
+Analysis: Based on the plot, we found that the manner: Left Turn caused the most accidents including the highest fatal injury. Usually left turn is allowed during the green light which also allows straight car across, so many people who turned left might neglect the coming cars. It suggested that when drivers turn left, they should be more careful. 
 
 
 ## **Conclusion**
