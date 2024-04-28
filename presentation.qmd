@@ -145,11 +145,27 @@ data("penguins")
 ## Introduction
 
 ::: incremental
--   The primary goal of the project is to develop a user-friendly visualization tool that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
+-   The primary goal of the project is to develop a *user-friendly visualization tool* that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
 
--   **GIS Data from the City of Tucson** - This dataset contains publicly-available records of vehicle collisions from the Tucson Police Department, covering the period from March 2022 to the present.
+-   **GIS Data from the City of Tucson** - This data set contains publicly-available records of vehicle collisions from the Tucson Police Department, covering the period from March 2022 to the present.
 
--   Key variables in this dataset include: Date of collision, Injury severity, Manner of collision, Fatality status
+-   Key variables in this data set are:
+
+    -   Date of collision
+
+    -   Injury severity
+
+    -   Manner of collision
+
+    -   Fatality status
+:::
+
+## Project Approach
+
+::: incremental
+-   Utilize R Shiny to create interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
+-   Implement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson using the latitude and longitude coordinates in the dataset.
+-   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
 :::
 
 ## Question 1
@@ -164,38 +180,31 @@ data("penguins")
     -   Day (day of week accident occurred)
     -   InjurySeverity (how serious the injury caused by accident was)
 
--   ::: incremental
-    These variables may help us explore why certain days of the weeks or times of day lead to more accidents.
-    :::
+-   Plot Approach:
+
+    -   Monthly time series of accidents ranging from 2018 to 2024. These years will be plotted as separate lines.
+
+    -   Heat map of accidents by hour and day of the week.
 :::
 :::
 
-## Approach
+## Question 1 Results and Key Observations
 
-::: incremental
--   Development of Interactive Visualizations :
-    -   Utilize R Shiny for the creation of an interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
-    -   Implement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson using the latitude and longitude coordinates in the dataset.
-    -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
-:::
+### Monthly Time Series
 
-## Time series of Accidents
+-   Tucson experiences the most accidents in 2019 compared to any other year. 2020 sees the least amount of accidents.
 
--   This plots show time series of Accident over months for each year.
+-   Fewer accidents occur in summer months than winter months.
 
--   During summer the number of accident decreases.
+    ![](images/yearly_plot.PNG)
 
--   It has been observed that women exhibit a higher employment rate.
+### Hourly Heat Map
 
-    ![](images/times.png)
+-   Weekdays see higher frequencies of car accidents than weekends.
 
-## Times with higher Accident
+-   For weekdays (Monday - Friday), most accidents occur from 1pm to 6 pm. However, weekends do see an increase in accidents in the afternoon/evening as well.
 
--   This plots show heat map of number of accidents in each hour of everyday in a week.
-
--   Except of weekends, every day from 1pm to 6 pm most accidents happens
-
-    ![](images/heat.png){width="643mm"}
+    ![](images/question_1_part_2.PNG)
 
 ## Question 2
 
@@ -207,39 +216,36 @@ data("penguins")
     -   FatalCollision
     -   TotalFatalities
 
--   We will create a series of stacked bar plots that show the number of accidents based the type of violation. Pie charts may be included to provide a high-level summary of the percentage of crashes per violation type.
+-   Plot Approach:
+
+    -   Stacked bar plots that show the number of accidents based the type of violation.
+
+    -   Pie charts to provide a high-level summary of the percentage of crashes per violation type.
 :::
 
-## Approach for Question 2
+## Question 2 Results and Key Observations
 
-::: incremental
--   Same as the first question:
+### Injury Severity (Stacked bar plots)
 
-    -   Utilize R Shiny for the creation of an interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
-    -   Implement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson using the latitude and longitude coordinates in the dataset.
-    -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
-:::
+-   It is observed that 50.2% of accidents do not result in injury.
+-   However, 49.8% of drivers do experience injury from car accidents in Tucson. The most common injury types are non-incapacitating injury and possible injury.
+-   It is also seen that 1.6% of accidents with fatal injury.
 
-## Collision Severity
+![](images/injury_severity.png){fig-align="center"}
 
--   50.2% of accidents without injury
--   1.6% of accidents with fatal injury
-
-![](images/bar.png){fig-align="center"}
-
-## Collision Reason
+### Collision reason (Pie Chart)
 
 ::: columns
 ::: {.column width="40%"}
--   74.4% of collisions involve Intersection
+-   The most common location of collisions is at intersections (74.7%), showing that caution must be taken in these areas.
 
--   38.1% of collisions involve Distracted Driver
+-   38.1% of collisions involve a distracted driver and 18.5% involve a speeding driver.
 
--   Intersections are the most dangerous locations
+-   For the future, it would be interesting to see how different collision reasons are correlated. For instance, do distracted drivers tend to speed? This could potentially help introduce stricter regulations on phone use, for example.
 :::
 
 ::: {.column width="60%"}
-![](images/pies.png){fig-align="right" width="116mm"}
+![](images/question_2_part_2.PNG){fig-align="right"}
 :::
 :::
 

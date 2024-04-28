@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "presentation.html#introduction",
+    "href": "presentation.html#introduction",
+    "title": "Tucson Car Collision Analysis",
+    "section": "",
+    "text": "The primary goal of the project is to develop a user-friendly visualization tool that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.\nGIS Data from the City of Tucson - This data set contains publicly-available records of vehicle collisions from the Tucson Police Department, covering the period from March 2022 to the present.\nKey variables in this data set are:\n\nDate of collision\nInjury severity\nManner of collision\nFatality status"
+  },
+  {
+    "objectID": "presentation.html#project-approach",
+    "href": "presentation.html#project-approach",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Project Approach",
+    "text": "Project Approach\n\n\nUtilize R Shiny to create interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).\nImplement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson using the latitude and longitude coordinates in the dataset.\nUse ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input."
+  },
+  {
+    "objectID": "presentation.html#question-1",
+    "href": "presentation.html#question-1",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Question 1",
+    "text": "Question 1\n\n\n\nDoes day of the week and/or time of day affect severity and the number of accidents?\nKey variables to use:\n\nTimeOccu (time at which accident occurred)\nDay (day of week accident occurred)\nInjurySeverity (how serious the injury caused by accident was)\n\n\nThese variables may help us explore why certain days of the weeks or times of day lead to more accidents."
+  },
+  {
+    "objectID": "presentation.html#time-series-of-accidents",
+    "href": "presentation.html#time-series-of-accidents",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Time series of Accidents",
+    "text": "Time series of Accidents\n\nThis plots shows a monthly time series of Tucson car accidents from 2018 to 2024.\n\nKey Observations\n\nTucson experiences the most accidents in 2019 compared to any other year. 2020 sees the least amount of accidents.\nFewer accidents occur in summer months than winter months."
+  },
+  {
+    "objectID": "presentation.html#times-with-higher-accident",
+    "href": "presentation.html#times-with-higher-accident",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Times with higher Accident",
+    "text": "Times with higher Accident\n\nThis plots show heat map of number of accidents in each hour of everyday in a week.\nExcept of weekends, every day from 1pm to 6 pm most accidents happens"
+  },
+  {
+    "objectID": "presentation.html#question-2",
+    "href": "presentation.html#question-2",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Question 2",
+    "text": "Question 2\n\n\nWhat is the relationship between the type of violation and if the accident resulted in a fatality?\nKey variables to use:\n\nFatalCollision\nTotalFatalities\n\nWe will create a series of stacked bar plots that show the number of accidents based the type of violation. Pie charts may be included to provide a high-level summary of the percentage of crashes per violation type."
+  },
+  {
+    "objectID": "presentation.html#collision-severity",
+    "href": "presentation.html#collision-severity",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Collision Severity",
+    "text": "Collision Severity\n\n50.2% of accidents without injury\n1.6% of accidents with fatal injury"
+  },
+  {
+    "objectID": "presentation.html#collision-reason",
+    "href": "presentation.html#collision-reason",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Collision Reason",
+    "text": "Collision Reason\n\n\n\n74.4% of collisions involve Intersection\n38.1% of collisions involve Distracted Driver\nIntersections are the most dangerous locations"
+  },
+  {
+    "objectID": "presentation.html#thank-you",
+    "href": "presentation.html#thank-you",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Thank You",
+    "text": "Thank You"
+  },
+  {
+    "objectID": "presentation.html",
+    "href": "presentation.html",
+    "title": "Tucson Car Collision Analysis",
+    "section": "",
+    "text": "The primary goal of the project is to develop a user-friendly visualization tool that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.\nGIS Data from the City of Tucson - This data set contains publicly-available records of vehicle collisions from the Tucson Police Department, covering the period from March 2022 to the present.\nKey variables in this data set are:\n\nDate of collision\nInjury severity\nManner of collision\nFatality status"
+  }
+]
