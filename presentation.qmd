@@ -160,7 +160,7 @@ data("penguins")
     -   Fatality status
 :::
 
-## Project Approach {.smaller}
+## Project Approach
 
 ::: incremental
 -   Utilize R Shiny to create interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
@@ -171,7 +171,6 @@ data("penguins")
 ## Question 1 {.smaller}
 
 ::: incremental
-::: {.incremental width="40%"}
 -   Does day of the week and/or time of day affect severity and the number of accidents?
 
 -   Key variables to use:
@@ -186,28 +185,23 @@ data("penguins")
 
     -   Heat map of accidents by hour and day of the week.
 :::
-:::
 
 
-::: incremental
-### Monthly Time Series {.smaller}
+## Monthly Time Series {.smaller}
 
 -   Tucson experiences the most accidents in 2019 compared to any other year. 2020 sees the least amount of accidents.
 
 -   Fewer accidents occur in summer months than winter months.
 
     ![](images/yearly_plot.PNG)
-:::
 
-::: incremental
-### Hourly Heat Map {.smaller} {.smaller}
+## Hourly Heat Map {.smaller}
 
 -   Weekdays see higher frequencies of car accidents than weekends.
 
 -   For weekdays (Monday - Friday), most accidents occur from 1pm to 6 pm. However, weekends do see an increase in accidents in the afternoon/evening as well.
 
     ![](images/question_1_part_2.PNG)
-:::
 
 ## Question 2 {.smaller}
 
@@ -226,20 +220,16 @@ data("penguins")
     -   Pie charts to provide a high-level summary of the percentage of crashes per violation type.
 :::
 
-
-::: incremental
-### Injury Severity (Stacked bar plots) {.smaller}
+## Injury Severity (Stacked bar plots) {.smaller}
 
 -   It is observed that 50.2% of accidents do not result in injury.
 -   However, 49.8% of drivers do experience injury from car accidents in Tucson. The most common injury types are non-incapacitating injury and possible injury.
 -   It is also seen that 1.6% of accidents with fatal injury.
 
 ![](images/injury_severity.png){fig-align="center"}
-:::
 
-### Collision reason (Pie Chart) {.smaller}
+## Collision reason (Pie Chart) {.smaller}
 
-::: incremental
 -   The most common location of collisions is at intersections (74.7%), showing that caution must be taken in these areas.
 
 -   38.1% of collisions involve a distracted driver and 18.5% involve a speeding driver.
@@ -247,10 +237,7 @@ data("penguins")
 -   For the future, it would be interesting to see how different collision reasons are correlated. For instance, do distracted drivers tend to speed? This could potentially help introduce stricter regulations on phone use, for example.
 
 ![](images/question_2_part_2.PNG){fig-align="right"}
-:::
 
-::: incremental
 ## Thank You
 
 ![](images/thankyou.jpg){fig-align="center"}
-:::
