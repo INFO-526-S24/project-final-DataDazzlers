@@ -190,6 +190,7 @@ data("penguins")
 
 ## Question 1 Results and Key Observations
 
+::: incremental
 ### Monthly Time Series
 
 -   Tucson experiences the most accidents in 2019 compared to any other year. 2020 sees the least amount of accidents.
@@ -197,7 +198,9 @@ data("penguins")
 -   Fewer accidents occur in summer months than winter months.
 
     ![](images/yearly_plot.PNG)
+:::
 
+::: incremental
 ### Hourly Heat Map
 
 -   Weekdays see higher frequencies of car accidents than weekends.
@@ -205,6 +208,7 @@ data("penguins")
 -   For weekdays (Monday - Friday), most accidents occur from 1pm to 6 pm. However, weekends do see an increase in accidents in the afternoon/evening as well.
 
     ![](images/question_1_part_2.PNG)
+:::
 
 ## Question 2
 
@@ -225,6 +229,7 @@ data("penguins")
 
 ## Question 2 Results and Key Observations
 
+::: incremental
 ### Injury Severity (Stacked bar plots)
 
 -   It is observed that 50.2% of accidents do not result in injury.
@@ -232,23 +237,22 @@ data("penguins")
 -   It is also seen that 1.6% of accidents with fatal injury.
 
 ![](images/injury_severity.png){fig-align="center"}
+:::
 
 ### Collision reason (Pie Chart)
 
-::: columns
-::: {.column width="40%"}
+::: incremental
 -   The most common location of collisions is at intersections (74.7%), showing that caution must be taken in these areas.
 
 -   38.1% of collisions involve a distracted driver and 18.5% involve a speeding driver.
 
 -   For the future, it would be interesting to see how different collision reasons are correlated. For instance, do distracted drivers tend to speed? This could potentially help introduce stricter regulations on phone use, for example.
-:::
 
-::: {.column width="60%"}
 ![](images/question_2_part_2.PNG){fig-align="right"}
 :::
-:::
 
+::: incremental
 ## Thank You
 
 ![](images/thankyou.jpg){fig-align="center"}
+:::
