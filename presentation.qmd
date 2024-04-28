@@ -142,7 +142,7 @@ cars_data <- read.csv("data/tucson_data.csv") |>
 data("penguins")
 ```
 
-## Introduction
+## Introduction {.smaller}
 
 ::: incremental
 -   The primary goal of the project is to develop a *user-friendly visualization tool* that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
@@ -160,7 +160,7 @@ data("penguins")
     -   Fatality status
 :::
 
-## Project Approach
+## Project Approach {.smaller}
 
 ::: incremental
 -   Utilize R Shiny to create interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
@@ -168,7 +168,7 @@ data("penguins")
 -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
 :::
 
-## Question 1
+## Question 1 {.smaller}
 
 ::: incremental
 ::: {.incremental width="40%"}
@@ -188,10 +188,9 @@ data("penguins")
 :::
 :::
 
-## Question 1 Results and Key Observations
 
 ::: incremental
-### Monthly Time Series
+### Monthly Time Series {.smaller}
 
 -   Tucson experiences the most accidents in 2019 compared to any other year. 2020 sees the least amount of accidents.
 
@@ -201,7 +200,7 @@ data("penguins")
 :::
 
 ::: incremental
-### Hourly Heat Map
+### Hourly Heat Map {.smaller} {.smaller}
 
 -   Weekdays see higher frequencies of car accidents than weekends.
 
@@ -210,7 +209,7 @@ data("penguins")
     ![](images/question_1_part_2.PNG)
 :::
 
-## Question 2
+## Question 2 {.smaller}
 
 ::: incremental
 -   What is the relationship between the type of violation and if the accident resulted in a fatality?
@@ -227,10 +226,9 @@ data("penguins")
     -   Pie charts to provide a high-level summary of the percentage of crashes per violation type.
 :::
 
-## Question 2 Results and Key Observations
 
 ::: incremental
-### Injury Severity (Stacked bar plots)
+### Injury Severity (Stacked bar plots) {.smaller}
 
 -   It is observed that 50.2% of accidents do not result in injury.
 -   However, 49.8% of drivers do experience injury from car accidents in Tucson. The most common injury types are non-incapacitating injury and possible injury.
@@ -239,7 +237,7 @@ data("penguins")
 ![](images/injury_severity.png){fig-align="center"}
 :::
 
-### Collision reason (Pie Chart)
+### Collision reason (Pie Chart) {.smaller}
 
 ::: incremental
 -   The most common location of collisions is at intersections (74.7%), showing that caution must be taken in these areas.
