@@ -44,7 +44,6 @@ pacman::p_load(
   palmerpenguins
   )
 
-
 ```
 
 ```{r}
@@ -189,7 +188,7 @@ data("penguins")
 
 -   Comparing year wise Fewer accidents occur in summer months than winter months.
 
-    ![](images/yearly_plot.PNG){fig-align="center" width="744"}
+    ![](images/yearly_plot.PNG){fig-align="center" width="873"}
 
 ## Frequency of Accidents Per Day and Hour {.smaller}
 

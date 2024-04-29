@@ -1,6 +1,5 @@
 ---
-format: 
-  dashboard
+format: dashboard
 editor_options: 
   chunk_output_type: console
 execute:
@@ -24,7 +23,7 @@ pacman::p_load(
   leaflet,
   highcharter,
   htmlwidgets,
-  crosstalk
+  osrm
   )
 
 ```
@@ -45,7 +44,7 @@ cars_data <- read.csv("data/tucson_data.csv") |>
   clean_names() |>
   mutate(
     collision_date  = format(ymd_hms(collision_date), "%m/%d/%Y"), # Clean date type
-    year = as.factor(year_occu),
+    year = year_occu,
     month = as.factor(month_abbr),
     month_no = as.factor(month_occu),
     day  = as.factor(day),
@@ -114,6 +113,7 @@ cars_data <- read.csv("data/tucson_data.csv") |>
          intersection_related, in_out_vehicle) 
 
 ```
+
 
 # Overall
 
@@ -200,7 +200,7 @@ list(
 #| title: Collions
 
 cars_data |>
-  filter(year!=2017) |>
+  filter(!year %in% c(2017, 2024)) |>
   group_by(year) |>
   summarise(
     fatalities = sum(total_fatalities, na.rm = TRUE),
@@ -244,7 +244,7 @@ cars_data |>
 
 cars_data |>
   filter(hitand_run=='Yes',
-         year != 2017) |>
+         !year %in% c(2017, 2024)) |>
   group_by(year) |>
   summarise(
     fatalities = sum(total_fatalities, na.rm = TRUE),
@@ -288,7 +288,7 @@ cars_data |>
 
 cars_data |>
   filter(violation_speed=='Yes',
-         year != 2017) |>
+         !year %in% c(2017, 2024)) |>
   group_by(year) |>
   summarise(
     fatalities = sum(total_fatalities, na.rm = TRUE),
@@ -332,7 +332,7 @@ cars_data |>
 
 cars_data |>
   filter(offense_type=="DUI Accidents",
-         year != 2017) |>
+         !year %in% c(2017, 2024)) |>
   group_by(year) |>
   summarise(
     fatalities = sum(total_fatalities, na.rm = TRUE),
@@ -386,7 +386,7 @@ cars_data |>
   hc_title(text = "Collisions by Offense Type",  align = "center") |>
   hc_xAxis(labels = list(enabled = TRUE)) |>
   hc_yAxis(title = list(text = "Collisions")) |>
-  hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, format = '{point.y:.0f}'),
+  hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")),
                                color = "#3498db")) |>
   hc_add_theme(hc_theme_smpl()) |>
   hc_legend(enabled = FALSE)
@@ -405,7 +405,7 @@ cars_data |>
   hc_chart(inverted = TRUE) |>
   hc_xAxis(labels = list(enabled = TRUE)) |>
   hc_yAxis(title = list(text = "Injuries")) |>
-  hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, format = '{point.y:.0f}'),
+  hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")),
                                color = "#2ecc71")) |>
   hc_add_theme(hc_theme_smpl()) |>
   hc_legend(enabled = FALSE)
@@ -425,7 +425,7 @@ cars_data |>
   hc_chart(inverted = TRUE) |>
   hc_xAxis(labels = list(enabled = TRUE)) |>
   hc_yAxis(title = list(text = "Fatalities")) |>
-  hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, format = '{point.y:.0f}'),
+  hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")),
                                color = "#e74c3c")) |>
   hc_add_theme(hc_theme_smpl()) |>
   hc_legend(enabled = FALSE)
@@ -493,6 +493,48 @@ hw_grid(list(injuries, fatalities),
 
 # Traffic Collision
 
+```{r}
+#| label: otraffic-collasion-values
+#| results: hide
+
+collision_summary <-  cars_data %>%
+    summarise(
+        speed_fatalities = sum(ifelse(violation_speed == "Yes", total_fatalities, 0), na.rm = TRUE),
+        too_close_fatalities = sum(ifelse(violation_too_close == "Yes", total_fatalities, 0), na.rm = TRUE),
+        aggressive_driving_fatalities = sum(ifelse(violation_aggressive_driving == "Yes", total_fatalities, 0), na.rm = TRUE),
+        failure_to_yield_fatalities = sum(ifelse(violation_failure_to_yield == "Yes", total_fatalities, 0), na.rm = TRUE),
+        wrong_way_fatalities = sum(ifelse(violation_wrong_way == "Yes", total_fatalities, 0), na.rm = TRUE),
+        turning_fatalities = sum(ifelse(violation_turning == "Yes", total_fatalities, 0), na.rm = TRUE),
+        traffic_control_fatalities = sum(ifelse(violation_traffic_control_device == "Yes", total_fatalities, 0), na.rm = TRUE),
+        crosswalk_fatalities = sum(ifelse(violation_crosswalk == "Yes", total_fatalities, 0), na.rm = TRUE),
+        
+        speed_injuries = sum(ifelse(violation_speed == "Yes", total_injuries, 0), na.rm = TRUE),
+        too_close_injuries = sum(ifelse(violation_too_close == "Yes", total_injuries, 0), na.rm = TRUE),
+        aggressive_driving_injuries = sum(ifelse(violation_aggressive_driving == "Yes", total_injuries, 0), na.rm = TRUE),
+        failure_to_yield_injuries = sum(ifelse(violation_failure_to_yield == "Yes", total_injuries, 0), na.rm = TRUE),
+        wrong_way_injuries = sum(ifelse(violation_wrong_way == "Yes", total_injuries, 0), na.rm = TRUE),
+        turning_injuries = sum(ifelse(violation_turning == "Yes", total_injuries, 0), na.rm = TRUE),
+        traffic_control_injuries = sum(ifelse(violation_traffic_control_device == "Yes", total_injuries, 0), na.rm = TRUE),
+        crosswalk_injuries = sum(ifelse(violation_crosswalk == "Yes", total_injuries, 0), na.rm = TRUE),
+        
+        speed_collisions = sum(violation_speed == "Yes", na.rm = TRUE),
+        too_close_collisions = sum(violation_too_close == "Yes", na.rm = TRUE),
+        aggressive_driving_collisions = sum(violation_aggressive_driving == "Yes", na.rm = TRUE),
+        failure_to_yield_collisions = sum(violation_failure_to_yield == "Yes", na.rm = TRUE),
+        wrong_way_collisions = sum(violation_wrong_way == "Yes", na.rm = TRUE),
+        turning_collisions = sum(violation_turning == "Yes", na.rm = TRUE),
+        traffic_control_collisions = sum(violation_traffic_control_device == "Yes", na.rm = TRUE),
+        crosswalk_collisions = sum(violation_crosswalk == "Yes", na.rm = TRUE),
+        .groups = "drop"
+    ) %>%
+    pivot_longer(
+        cols = everything(),
+        names_to = c("violation", "metric"),
+        names_pattern = "(.*?)_(fatalities|injuries|collisions)"
+    ) %>%
+    arrange(desc(value),metric)
+
+```
 ## Row {height="100%"}
 
 ### Column {width="50%"} {.tabset}
@@ -537,10 +579,53 @@ cars_data |>
 ### Column {width="50%"} {.tabset}
 
 ```{r}
+#| title: Overall
+
+collision_summary |>
+    hchart(
+        type = "column",
+        hcaes(x = violation, y = value, group = metric),
+        # stacking = "normal",
+        color = c("#3498db", "#e74c3c", "#2ecc71")
+    ) %>%
+    hc_title(text = "Car Collisions, Injuries, Fatalities by Violation Type", align = "center") %>%
+    hc_plotOptions(
+        series = list(
+            dataLabels = list(
+                enabled = TRUE,
+                formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }"),
+                style = list(fontSize = "10px")
+            )
+        )
+    ) %>%
+    hc_xAxis(
+        title = NULL,
+        labels = list(
+            rotation = -45,
+            style = list(fontSize = "12px")
+        )
+    ) %>%
+    hc_yAxis(
+        title = list(text = "Count"),
+        labels = list(
+            style = list(fontSize = "12px")
+        )
+    ) %>%
+    hc_add_theme(hc_theme_smpl()) %>%
+    hc_legend(
+        enabled = TRUE,
+        layout = "horizontal",
+        align = "center",
+        verticalAlign = "bottom",
+        itemStyle = list(fontSize = "10px")
+    )
+```
+
+```{r}
 #| title: Collisions
 
 cars_data |>
-  filter(year != 2017) |>
+  filter(!year %in% c(2017, 2024)) |>
   group_by(year) |>
   summarise(
     speed = sum(violation_speed == "Yes", na.rm = TRUE),
@@ -557,6 +642,7 @@ cars_data |>
     values_to = "count"
   ) |>
   filter(count > 0) |>
+  arrange(year) |>
   hchart(
     type = "bar",
     hcaes(x = year, y = count, group = metric)
@@ -567,12 +653,13 @@ cars_data |>
       stacking = "normal",
       dataLabels = list(
         enabled = TRUE, 
-        format = '{y}', 
+        formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }"), 
         style = list(fontSize = "10px")  # Reduced font size for data labels
       )
     )
   ) |>
   hc_xAxis(
+    categories = unique(cars_data$year[!cars_data$year %in% c(2017, 2024)]),
     title = NULL,
     labels = list(
       rotation = 0,
@@ -599,7 +686,7 @@ cars_data |>
 #| title: Violation - Injuries
 
 cars_data |>
-  filter(year != 2017) |>
+  filter(!year %in% c(2017, 2024)) |>
   group_by(year) |>
   summarise(
     speed = sum(ifelse(violation_speed == "Yes", total_injuries, 0), na.rm = TRUE),
@@ -618,6 +705,7 @@ cars_data |>
     values_to = "count"
   ) |>
   filter(count > 0) |>
+  arrange(year) |>
   hchart(
     type = "bar",
     hcaes(x = year, y = count, group = metric) # Swap x and y mapping
@@ -628,16 +716,17 @@ cars_data |>
       stacking = "normal",
       dataLabels = list(
         enabled = TRUE, 
-        format = '{y}', 
+        formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }"), 
         style = list(fontSize = "10px")  # Reduced font size for data labels
       )
     )
   ) |>
   hc_xAxis(
+    categories = unique(cars_data$year[!cars_data$year %in% c(2017, 2024)]),
     title = NULL,
     labels = list(
-      rotation = 0, # Rotate x-axis labels
-      style = list(fontSize = "12px") # Adjust font size
+      rotation = 0,
+      style = list(fontSize = "12px")
     )
   ) |>
   hc_yAxis(
@@ -661,7 +750,7 @@ cars_data |>
 #| title: Violation - Fatalities
 
 cars_data |>
-  filter(year != 2017) |>
+  filter(!year %in% c(2017, 2024)) |>
   group_by(year) |>
   summarise(
     speed = sum(ifelse(violation_speed == "Yes", total_fatalities, 0), na.rm = TRUE),
@@ -680,6 +769,7 @@ cars_data |>
     values_to = "count"
   ) |>
   filter(count > 0) |>
+  arrange(year) |>
   hchart(
     type = "bar",
     hcaes(x = year, y = count, group = metric) # Swap x and y mapping
@@ -690,15 +780,17 @@ cars_data |>
       stacking = "normal",
       dataLabels = list(
         enabled = TRUE, 
-        format = '{y}', 
+        formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }"), 
         style = list(fontSize = "10px")  # Reduced font size for data labels
       )
     )
   ) |>
   hc_xAxis(
+    categories = unique(cars_data$year[!cars_data$year %in% c(2017, 2024)]),
+    title = NULL,
     labels = list(
-      rotation = 0, # Rotate x-axis labels
-      style = list(fontSize = "12px") # Adjust font size
+      rotation = 0,
+      style = list(fontSize = "12px")
     )
   ) |>
   hc_yAxis(
@@ -727,12 +819,13 @@ cars_data |>
 #| title: Yearly
 
 cars_data |>
-  filter(year!=2017) |>
+  filter(!year %in% c(2017, 2024)) |>
   group_by(year) |>
   summarise(
     fatalities = sum(total_fatalities, na.rm = TRUE),
     injuries = sum(total_injuries, na.rm = TRUE),
-    accidents = n()
+    accidents = n(),
+    .groups = "drop"
   ) |>
   pivot_longer(
     cols = c(fatalities, injuries, accidents),
@@ -761,9 +854,9 @@ cars_data |>
                                     chartOptions = list(legend = list(layout = 'horizontal',
                                                                       align = 'center',
                                                                       verticalAlign = 'bottom'))))) |>
-    hc_add_theme(hc_theme_smpl()) |>
   hc_add_theme(hc_theme_smpl()) |>
-    hc_exporting(enabled = FALSE)  # Enable exporting if needed
+  hc_exporting(enabled = FALSE)  # Enable exporting if needed
+
 ```
 
 ```{r}
@@ -774,7 +867,8 @@ cars_data |>
   summarise(
     fatalities = sum(total_fatalities, na.rm = TRUE),
     injuries = sum(total_injuries, na.rm = TRUE),
-    accidents = n()
+    accidents = n(),
+    .groups = "drop"
   ) |>
   pivot_longer(
     cols = c(fatalities, injuries, accidents),
@@ -804,9 +898,9 @@ cars_data |>
                                     chartOptions = list(legend = list(layout = 'horizontal',
                                                                       align = 'center',
                                                                       verticalAlign = 'bottom'))))) |>
-    hc_add_theme(hc_theme_smpl()) |>
   hc_add_theme(hc_theme_smpl()) |>
-    hc_exporting(enabled = FALSE)  # Enable exporting if needed
+  hc_exporting(enabled = FALSE)  # Enable exporting if needed
+
 ```
 
 ```{r}
@@ -851,6 +945,7 @@ cars_data |>
                                                                       verticalAlign = 'bottom'))))) |>
     hc_add_theme(hc_theme_smpl()) |>
     hc_exporting(enabled = FALSE)  # Enable exporting if needed
+
 ```
 
 ```{r}
@@ -861,7 +956,8 @@ cars_data |>
   summarise(
     fatalities = sum(total_fatalities, na.rm = TRUE),
     injuries = sum(total_injuries, na.rm = TRUE),
-    accidents = n()
+    accidents = n(),
+    .groups = "drop"
   ) |>
   pivot_longer(
     cols = c(fatalities, injuries, accidents),
@@ -891,8 +987,9 @@ cars_data |>
                                     chartOptions = list(legend = list(layout = 'horizontal',
                                                                       align = 'center',
                                                                       verticalAlign = 'bottom'))))) |>
-    hc_add_theme(hc_theme_smpl()) |>
+     hc_add_theme(hc_theme_smpl()) |>
     hc_exporting(enabled = FALSE)  # Enable exporting if needed
+
 ```
 
 ### Column {width="60%"}
@@ -902,14 +999,16 @@ cars_data |>
 
 # Convert month column to character to prevent highcharter from treating it as a timestamp
 month_summary <- cars_data |>
-  filter(year!=2017) |>
-  group_by(year, month) |>
+  filter(!year %in% c(2017,2024)) |>
+  group_by(year, month, month_no) |>
   summarise(accidents = n(), .groups = "drop") |>
   pivot_wider(
     names_from = year,
     values_from = accidents
   ) |>
-  mutate(month = as.character(month))
+  mutate(month = as.character(month)) |>
+  arrange(month_no) |>
+  select(-month_no)
 
 # Create the highchart object
 month_chart <- highchart() |>
@@ -965,9 +1064,12 @@ highchart() |>
   ) |>
   hc_tooltip(
     useHTML = TRUE,
-    headerFormat = '<b>{series.xAxis.categories[point.x]}:00 - {series.yAxis.categories[point.y]}</b><br>',
-    pointFormat = '<b>{point.value} accidents</b>'
+    formatter = JS("function() {
+      return '<b>' + this.series.yAxis.categories[this.point.y] + ', ' + this.series.xAxis.categories[this.point.x] + ':00' + '</b><br>' +
+             '<b>' + this.point.value + ' accidents</b>';
+    }")
   )
+
 ```
 
 # Collision Reason
@@ -1060,14 +1162,13 @@ highchart() |>
 ### Column {width="60%"} {.tabset}
 
 ```{r}
-#| title: Accidents by Collision Manner (k)
+#| title: Accidents by Collision Manner
 
 cars_data |>
   mutate(collision_manner = sub(" \\(.*", "", collision_manner)) |>
   group_by(collision_manner) |>
   summarise(accidents = n(), .groups = "drop") |>
-  mutate(collision_manner = stringr::str_wrap(collision_manner, width = 5),
-         accidents = accidents/1000) |>
+  mutate(collision_manner = stringr::str_wrap(collision_manner, width = 5)) |>
   arrange(desc(accidents)) |>
   filter(collision_manner!="") |>
   hchart("column", hcaes(x = collision_manner, y = accidents)) |>
@@ -1082,14 +1183,17 @@ cars_data |>
         textOverflow = 'none',
         width = '8px'))) |>
   hc_yAxis(title = list(text = "Number of Accidents (K)")) |>
-  hc_tooltip(pointFormat = "{series.name}: <b>{point.y}K</b>") |>
+  hc_tooltip(
+      pointFormat = "<b>{point.y}</b>",
+      formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")) |>
   hc_plotOptions(column = list(
     pointPadding = 0.02,
     groupPadding = 0.02,
     dataLabels = list(
       enabled = TRUE,
-      format = "{y}K",
-      fontSize = '1px'))) |>
+      formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }"),
+      fontSize = '1px'
+    ))) |>
   hc_add_theme(hc_theme_smpl()) |>
   hc_legend(enabled = FALSE)
 
@@ -1123,7 +1227,7 @@ cars_data |>
   hc_plotOptions(column = list(
     pointPadding = 0.02,
     groupPadding = 0.02,
-   dataLabels = list(
+    dataLabels = list(
       enabled = TRUE,
       formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }"),
       fontSize = '1px'
@@ -1214,7 +1318,7 @@ cars_data |>
     cols = c(fatalities, injuries, accidents),
     names_to = "metric", 
     values_to = "count"
-  ) |>
+  ) |> 
   arrange(desc(count)) |>
   hchart("column", hcaes(x = division, y = count, group = metric)) |>
   hc_colors(c("#3498db", "#e74c3c", "#2ecc71")) |>
@@ -1364,6 +1468,9 @@ cars_data |>
 
 #| title: Map
 # Segment divisions based on accident categories
+# Assuming you have your "cars_data" data frame loaded
+
+# Filter data for each accident type
 fatal_accidents <- cars_data |>
   filter(!is.na(latitude), !is.na(longitude)) |>
   filter(offense_type == "Fatal Accidents")
@@ -1388,9 +1495,13 @@ other_vehicle_accidents <- cars_data |>
   filter(!is.na(latitude), !is.na(longitude)) |>
   filter(offense_type == "Other Vehicle Accidents")
 
-# Create leaflet map
-combined_map <- leaflet() |>
-  addTiles()
+# Define custom icons (replace filenames with your icon paths)
+fatal_icon <- makeIcon("images/fatal.png",  iconWidth = 30, iconHeight = 30)
+dui_icon <- makeIcon("images/dui.png",  iconWidth = 30, iconHeight = 30)
+injury_icon <- makeIcon("images/injury.png", iconWidth = 30, iconHeight = 30)
+property_icon <- makeIcon("images/property.png",  iconWidth = 30, iconHeight = 30)
+non_traffic_icon <- makeIcon("images/non_traffic.png",  iconWidth = 30, iconHeight = 30)
+other_icon <- makeIcon("images/other_vehicle.png", iconWidth = 30, iconHeight = 30)
 
 # Define the bounding box for Tucson
 tucson_bounds <- list(
@@ -1398,53 +1509,71 @@ tucson_bounds <- list(
   c(32.4998, -110.7337)   # Northeast corner
 )
 
-# Create leaflet map
-combined_map <- leaflet(options = leafletOptions(maxBounds = tucson_bounds))|>
+uofa_bounds <- list(
+  c(32.225, -110.96),  # Southwest corner
+  c(32.235, -110.945)   # Northeast corner
+)
+
+# Create leaflet map with custom icons
+combined_map <- leaflet(options = leafletOptions(maxBounds = tucson_bounds)) |>
   addTiles() |>
+  addRectangles(
+    lng1 = uofa_bounds[[1]][[2]], lat1 = uofa_bounds[[1]][[1]],
+    lng2 = uofa_bounds[[2]][[2]], lat2 = uofa_bounds[[2]][[1]],
+    fillColor = "darkred",
+    fillOpacity = 0.5,
+    color = "darkred",
+    weight = 2
+  ) |>
   addMarkers(data = fatal_accidents, clusterOptions = markerClusterOptions(), 
+             icon = fatal_icon,
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
              lat = ~latitude) |>
   addMarkers(data = dui_accidents, clusterOptions = markerClusterOptions(), 
+             icon = dui_icon,
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
              lat = ~latitude) |>
   addMarkers(data = injury_accidents, clusterOptions = markerClusterOptions(), 
+             icon = injury_icon,
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
              lat = ~latitude) |>
   addMarkers(data = property_damage_accidents, clusterOptions = markerClusterOptions(), 
+             icon = property_icon,
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
              lat = ~latitude) |>
   addMarkers(data = non_traffic_accidents, clusterOptions = markerClusterOptions(), 
+             icon = non_traffic_icon,
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
              lat = ~latitude) |>
   addMarkers(data = other_vehicle_accidents, clusterOptions = markerClusterOptions(), 
+             icon = other_icon,
              popup = ~paste("Offense Type:", offense_type),
              label = ~offense_type,
              labelOptions = labelOptions(style = list("font-weight" = "normal", padding = "3px 8px")),
              lng = ~longitude,
              lat = ~latitude) |>
- # Fit map to the bounding box for Tucson
+  # Fit map to the bounding box for Tucson
   fitBounds(lng1 = tucson_bounds[[1]][[2]], lat1 = tucson_bounds[[1]][[1]], 
             lng2 = tucson_bounds[[2]][[2]], lat2 = tucson_bounds[[2]][[1]])
 
-# Show the combined map
+# Display the map
 combined_map
 
 ```
-
 
 
