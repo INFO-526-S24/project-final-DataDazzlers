@@ -227,6 +227,16 @@ data("penguins")
 
 ![](images/question_2_part_2.PNG){fig-align="center"}
 
+## Conclusion {.smaller}
+
+Identification of High-Risk Areas: The dashboard effectively pinpoints traffic violation hotspots, aiding in route planning and increasing awareness of dangerous zones.
+
+-   Enhanced Safety Measures: It empowers users, especially universities, to take specific actions like improving pedestrian safety through better lighting, signage, and enforcement around high-risk areas.
+
+-   Informed Decision-Making: By visualizing traffic data, the dashboard supports data-driven decisions that can lead to a significant reduction in traffic-related incidents.
+
+-   Overall Impact: This tool is a valuable asset for promoting safer driving behaviors and enhancing road safety for drivers and pedestrians alike.
+
 ## Thank You
 
 ![](images/thank_you.png){fig-align="center"}

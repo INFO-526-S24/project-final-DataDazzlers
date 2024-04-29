@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "presentation.html#introduction",
+    "href": "presentation.html#introduction",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Introduction",
+    "text": "Introduction\n\n\nThe primary goal of the project is to develop a user-friendly, visualization tool that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.\nWe use the GIS Data from the City of Tucson, which contains publicly-available records of vehicle collisions from the Tucson Police Department covering the period from March 2022 to the present.\nExamples of key variables in this data set are:\n\nDate of collision\nInjury severity\nManner of collision\nFatality status"
+  },
+  {
+    "objectID": "presentation.html#project-approach",
+    "href": "presentation.html#project-approach",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Project Approach",
+    "text": "Project Approach\n\n\nWe will use Quarto dashboard to create dashboard, allowing users to get insights and explore the data based on specific criteria (e.g., time period, accident severity).\nImplement Leaflet for interactive maps to display clustered data and identify accident hot-spots within Tucson using the latitude and longitude coordinates in the data-set.\nUse ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user."
+  },
+  {
+    "objectID": "presentation.html#question-1",
+    "href": "presentation.html#question-1",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Question 1",
+    "text": "Question 1\n\n\nDoes day of the week and/or time of day affect severity and the number of accidents?\nKey variables to use:\n\nCollision-date (date of collision in YMD format)\nTimeOccu (time at which accident occurred)\nMonthAccu (month in which accident occurred)\nDay (day of week in which accident occurred)"
+  },
+  {
+    "objectID": "presentation.html#frequency-of-accidents-per-month",
+    "href": "presentation.html#frequency-of-accidents-per-month",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Frequency of Accidents Per Month",
+    "text": "Frequency of Accidents Per Month\n\nTucson experienced the most accidents in 2019 compared to any other year. 2020 sees the least amount of accidents.\nComparing year wise Fewer accidents occur in summer months than winter months."
+  },
+  {
+    "objectID": "presentation.html#frequency-of-accidents-per-day-and-hour",
+    "href": "presentation.html#frequency-of-accidents-per-day-and-hour",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Frequency of Accidents Per Day and Hour",
+    "text": "Frequency of Accidents Per Day and Hour\n\nWeekdays see higher frequencies of car accidents than weekends.\n\nFor weekdays (Monday - Friday), most accidents occur from 1pm to 6 pm. However, weekends do see an increase in accidents in the afternoon/evening as well."
+  },
+  {
+    "objectID": "presentation.html#question-2",
+    "href": "presentation.html#question-2",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Question 2",
+    "text": "Question 2\n\n\nWhat is the relationship between the type of violation and if the accident resulted in injury or fatality?\nKey variables to use:\n\nFatal Collision (if collision resulted in fatality, yes/no)\nTotal Fatalities (number of fatalities due to accidents)\nInjury Severity (how serious the injury caused by accident was)\nViolation/Operator Variables (intersection, speeding, impairment, and distracted)"
+  },
+  {
+    "objectID": "presentation.html#injury-severity",
+    "href": "presentation.html#injury-severity",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Injury Severity",
+    "text": "Injury Severity\n\nIt is observed that 50.2% of accidents do not result in injury.\nHowever, 49.8% of drivers do experience injury from car accidents in Tucson. The most common injury types are non-incapacitating injury and possible injury.\nIt is also seen that 1.6% of accidents with fatal injury."
+  },
+  {
+    "objectID": "presentation.html#collision-reason",
+    "href": "presentation.html#collision-reason",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Collision reason",
+    "text": "Collision reason\n\nThe most common location of collisions is at intersections (74.7%).\n38.1% of collisions involve a distracted driver, 18.5% involve a speeding driver, and 6.9% involve an impaired driver."
+  },
+  {
+    "objectID": "presentation.html#conclusion",
+    "href": "presentation.html#conclusion",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Conclusion",
+    "text": "Conclusion\nIdentification of High-Risk Areas: The dashboard effectively pinpoints traffic violation hotspots, aiding in route planning and increasing awareness of dangerous zones.\n\nEnhanced Safety Measures: It empowers users, especially universities, to take specific actions like improving pedestrian safety through better lighting, signage, and enforcement around high-risk areas.\nInformed Decision-Making: By visualizing traffic data, the dashboard supports data-driven decisions that can lead to a significant reduction in traffic-related incidents.\nOverall Impact: This tool is a valuable asset for promoting safer driving behaviors and enhancing road safety for drivers and pedestrians alike."
+  },
+  {
+    "objectID": "presentation.html#thank-you",
+    "href": "presentation.html#thank-you",
+    "title": "Tucson Car Collision Analysis",
+    "section": "Thank You",
+    "text": "Thank You"
+  }
+]
