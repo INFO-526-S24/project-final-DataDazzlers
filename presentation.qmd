@@ -147,9 +147,9 @@ data("penguins")
 ## Introduction {.smaller}
 
 ::: incremental
--   The primary goal of the project is to develop a *user-friendly visualization tool* that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
+-   The primary goal of the project is to develop a **user-friendly, interactive visualization tool** that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
 
--   **GIS Data from the City of Tucson** - This data set contains publicly-available records of vehicle collisions from the Tucson Police Department, covering the period from March 2022 to the present.
+-   We usethe **GIS Data from the City of Tucson**, which contains publicly-available records of vehicle collisions from the Tucson Police Department covering the period from March 2022 to the present.
 
 -   Key variables in this data set are:
 
@@ -177,9 +177,10 @@ data("penguins")
 
 -   Key variables to use:
 
+    -   CollisionDate (date of collision in YMD format)
     -   TimeOccu (time at which accident occurred)
-    -   Day (day of week accident occurred)
-    -   InjurySeverity (how serious the injury caused by accident was)
+    -   MonthAccu (month in which accident occurred)
+    -   Day (day of week in which accident occurred)
 
 -   Plot Approach:
 
@@ -187,7 +188,6 @@ data("penguins")
 
     -   Heat map of accidents by hour and day of the week.
 :::
-
 
 ## Frequency of Accidents Per Month {.smaller}
 
@@ -208,12 +208,14 @@ data("penguins")
 ## Question 2 {.smaller}
 
 ::: incremental
--   What is the relationship between the type of violation and if the accident resulted in a fatality?
+-   What is the relationship between the type of violation and if the accident resulted in injury or fatality?
 
 -   Key variables to use:
 
-    -   FatalCollision
-    -   TotalFatalities
+    -   FatalCollision (if collision resulted in fatality, yes/no)
+    -   TotalFatalities (number of fatalities due to accidents)
+    -   InjurySeverity (how serious the injury caused by accident was)
+    -   Violation/Operator Variables (intersection, speeding, impairment, and distracted)
 
 -   Plot Approach:
 
@@ -232,7 +234,7 @@ data("penguins")
 
 ## Collision reason {.smaller}
 
--   The most common location of collisions is at intersections (74.7%), showing that caution must be taken in these areas.
+-   The most common location of collisions is at intersections (74.7%).
 
 -   38.1% of collisions involve a distracted driver, 18.5% involve a speeding driver, and 6.9% involve an impaired driver.
 
