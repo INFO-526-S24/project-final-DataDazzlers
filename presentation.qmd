@@ -147,7 +147,7 @@ data("penguins")
 ## Introduction {.smaller}
 
 ::: incremental
--   The primary goal of the project is to develop a **user-friendly, interactive visualization tool** that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
+-   The primary goal of the project is to develop a **user-friendly, visualization tool** that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
 
 -   We use the **GIS Data from the City of Tucson**, which contains publicly-available records of vehicle collisions from the Tucson Police Department covering the period from March 2022 to the present.
 
@@ -165,9 +165,9 @@ data("penguins")
 ## Project Approach
 
 ::: incremental
--   Utilize R Shiny to create interactive dashboard, allowing users to filter and explore the data based on specific criteria (e.g., time period, accident severity).
--   Implement Leaflet for interactive maps to display spatial data and identify accident hotspots within Tucson using the latitude and longitude coordinates in the dataset.
--   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
+-   We will use Quarto dashboard to create dashboard, allowing users to get insights and explore the data based on specific criteria (e.g., time period, accident severity).
+-   Implement Leaflet for interactive maps to display clustered data and identify accident hot-spots within Tucson using the latitude and longitude coordinates in the data-set.
+-   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user.
 :::
 
 ## Question 1
@@ -177,7 +177,7 @@ data("penguins")
 
 -   Key variables to use:
 
-    -   CollisionDate (date of collision in YMD format)
+    -   Collision-date (date of collision in YMD format)
     -   TimeOccu (time at which accident occurred)
     -   MonthAccu (month in which accident occurred)
     -   Day (day of week in which accident occurred)
@@ -185,9 +185,9 @@ data("penguins")
 
 ## Frequency of Accidents Per Month {.smaller}
 
--   Tucson experiences the most accidents in 2019 compared to any other year. 2020 sees the least amount of accidents.
+-   Tucson experienced the most accidents in 2019 compared to any other year. 2020 sees the least amount of accidents.
 
--   Fewer accidents occur in summer months than winter months.
+-   Comparing year wise Fewer accidents occur in summer months than winter months.
 
     ![](images/yearly_plot.PNG){fig-align="center"}
 
@@ -195,9 +195,9 @@ data("penguins")
 
 -   Weekdays see higher frequencies of car accidents than weekends.
 
--   For weekdays (Monday - Friday), most accidents occur from 1pm to 6 pm. However, weekends do see an increase in accidents in the afternoon/evening as well.
+    -   For weekdays (Monday - Friday), most accidents occur from 1pm to 6 pm. However, weekends do see an increase in accidents in the afternoon/evening as well.
 
-    ![](images/question_1_part_2.PNG){fig-align="center"}
+        ![](images/question_1_part_2.PNG){fig-align="center"}
 
 ## Question 2
 
@@ -206,9 +206,9 @@ data("penguins")
 
 -   Key variables to use:
 
-    -   FatalCollision (if collision resulted in fatality, yes/no)
-    -   TotalFatalities (number of fatalities due to accidents)
-    -   InjurySeverity (how serious the injury caused by accident was)
+    -   Fatal Collision (if collision resulted in fatality, yes/no)
+    -   Total Fatalities (number of fatalities due to accidents)
+    -   Injury Severity (how serious the injury caused by accident was)
     -   Violation/Operator Variables (intersection, speeding, impairment, and distracted)
 :::
 
