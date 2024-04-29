@@ -10,7 +10,7 @@ title-slide-attributes:
   data-slide-number: none
 format:
   revealjs:
-    theme: blood
+    theme: league
     transition: slide
     background-transition: fade
   
@@ -149,9 +149,9 @@ data("penguins")
 ::: incremental
 -   The primary goal of the project is to develop a **user-friendly, interactive visualization tool** that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
 
--   We usethe **GIS Data from the City of Tucson**, which contains publicly-available records of vehicle collisions from the Tucson Police Department covering the period from March 2022 to the present.
+-   We use the **GIS Data from the City of Tucson**, which contains publicly-available records of vehicle collisions from the Tucson Police Department covering the period from March 2022 to the present.
 
--   Key variables in this data set are:
+-   Examples of key variables in this data set are:
 
     -   Date of collision
 
@@ -181,12 +181,6 @@ data("penguins")
     -   TimeOccu (time at which accident occurred)
     -   MonthAccu (month in which accident occurred)
     -   Day (day of week in which accident occurred)
-
--   Plot Approach:
-
-    -   Monthly time series of accidents ranging from 2018 to 2024. These years will be plotted as separate lines.
-
-    -   Heat map of accidents by hour and day of the week.
 :::
 
 ## Frequency of Accidents Per Month {.smaller}
@@ -195,7 +189,7 @@ data("penguins")
 
 -   Fewer accidents occur in summer months than winter months.
 
-    ![](images/yearly_plot.PNG){fig-align="center"}
+    ![](images/yearly_plot.PNG){fig-align="center"}{height="90%"}{width ="90%"}
 
 ## Frequency of Accidents Per Day and Hour {.smaller}
 
@@ -216,12 +210,6 @@ data("penguins")
     -   TotalFatalities (number of fatalities due to accidents)
     -   InjurySeverity (how serious the injury caused by accident was)
     -   Violation/Operator Variables (intersection, speeding, impairment, and distracted)
-
--   Plot Approach:
-
-    -   Stacked bar plots that show the number of accidents based the type of violation.
-
-    -   Pie charts to provide a high-level summary of the percentage of crashes per violation type.
 :::
 
 ## Injury Severity {.smaller}
