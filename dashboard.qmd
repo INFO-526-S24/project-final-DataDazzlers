@@ -197,7 +197,7 @@ list(
 ### Column {width="50%"} {.tabset}
 
 ```{r}
-#| title: Collions
+#| title: Collisions
 
 cars_data |>
   filter(!year %in% c(2017, 2024)) |>
@@ -384,7 +384,7 @@ cars_data |>
   hchart("column", hcaes(x = offense_type, y = count)) |>
   hc_chart(inverted = TRUE) |>
   hc_title(text = "Collisions by Offense Type",  align = "center") |>
-  hc_xAxis(labels = list(enabled = TRUE)) |>
+   hc_xAxis(title = NULL, labels = list(enabled = TRUE)) |>
   hc_yAxis(title = list(text = "Collisions")) |>
   hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")),
                                color = "#3498db")) |>
@@ -403,7 +403,7 @@ cars_data |>
   hchart("column", hcaes(x = offense_type, y = injuries)) |>
   hc_title(text = "Injuries by Offense Type",  align = "center") |>
   hc_chart(inverted = TRUE) |>
-  hc_xAxis(labels = list(enabled = TRUE)) |>
+   hc_xAxis(title = NULL, labels = list(enabled = TRUE)) |>
   hc_yAxis(title = list(text = "Injuries")) |>
   hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")),
                                color = "#2ecc71")) |>
@@ -423,7 +423,7 @@ cars_data |>
   hchart("column", hcaes(x = offense_type, y = fatalities)) |>
   hc_title(text = "Fatalities by Offense Type",  align = "center") |>
   hc_chart(inverted = TRUE) |>
-  hc_xAxis(labels = list(enabled = TRUE)) |>
+   hc_xAxis(title = NULL, labels = list(enabled = TRUE)) |>
   hc_yAxis(title = list(text = "Fatalities")) |>
   hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, formatter = JS("function() { return Highcharts.numberFormat(this.y, 0, '.', ','); }")),
                                color = "#e74c3c")) |>
@@ -491,10 +491,10 @@ hw_grid(list(injuries, fatalities),
 
 ```
 
-# Traffic Collision
+# Traffic Violations
 
 ```{r}
-#| label: otraffic-collasion-values
+#| label: traffic-collasion-values
 #| results: hide
 
 collision_summary <-  cars_data %>%
@@ -683,7 +683,7 @@ cars_data |>
 ```
 
 ```{r}
-#| title: Violation - Injuries
+#| title: Injuries
 
 cars_data |>
   filter(!year %in% c(2017, 2024)) |>
@@ -747,7 +747,7 @@ cars_data |>
 ```
 
 ```{r}
-#| title: Violation - Fatalities
+#| title: Fatalities
 
 cars_data |>
   filter(!year %in% c(2017, 2024)) |>
