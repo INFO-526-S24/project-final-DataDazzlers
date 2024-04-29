@@ -189,7 +189,7 @@ data("penguins")
 
 -   Fewer accidents occur in summer months than winter months.
 
-    ![](images/yearly_plot.PNG){fig-align="center"}{height="75%"}
+    ![](images/yearly_plot.PNG){fig-align="center"}
 
 ## Frequency of Accidents Per Day and Hour {.smaller}
 
