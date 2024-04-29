@@ -10,7 +10,9 @@ title-slide-attributes:
   data-slide-number: none
 format:
   revealjs:
-    theme: league
+    theme: blood
+    transition: slide
+    background-transition: fade
   
 editor: visual
 execute:
@@ -193,7 +195,7 @@ data("penguins")
 
 -   Fewer accidents occur in summer months than winter months.
 
-    ![](images/yearly_plot.PNG)
+    ![](images/yearly_plot.PNG){fig-align="center"}
 
 ## Frequency of Accidents Per Day and Hour {.smaller}
 
@@ -201,7 +203,7 @@ data("penguins")
 
 -   For weekdays (Monday - Friday), most accidents occur from 1pm to 6 pm. However, weekends do see an increase in accidents in the afternoon/evening as well.
 
-    ![](images/question_1_part_2.PNG)
+    ![](images/question_1_part_2.PNG){fig-align="center"}
 
 ## Question 2 {.smaller}
 
