@@ -170,7 +170,7 @@ data("penguins")
 -   Use ggplot2 and Plotly for creating dynamic and static visualizations that can be adjusted according to user input.
 :::
 
-## Question 1 {.smaller}
+## Question 1
 
 ::: incremental
 -   Does day of the week and/or time of day affect severity and the number of accidents?
@@ -189,7 +189,7 @@ data("penguins")
 
 -   Fewer accidents occur in summer months than winter months.
 
-    ![](images/yearly_plot.PNG){fig-align="center"}{height="90%"}{width ="90%"}
+    ![](images/yearly_plot.PNG){fig-align="center"}{height="50"}
 
 ## Frequency of Accidents Per Day and Hour {.smaller}
 
@@ -199,7 +199,7 @@ data("penguins")
 
     ![](images/question_1_part_2.PNG){fig-align="center"}
 
-## Question 2 {.smaller}
+## Question 2
 
 ::: incremental
 -   What is the relationship between the type of violation and if the accident resulted in injury or fatality?
@@ -230,4 +230,4 @@ data("penguins")
 
 ## Thank You
 
-![](images/thankyou.jpg){fig-align="center"}
+![](images/thank_you.png){fig-align="center"}
