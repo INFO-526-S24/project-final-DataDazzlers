@@ -1,6 +1,6 @@
 ---
 title: "Tucson Car Collision Analysis"
-subtitle: "INFO 526 - Fall 2023 - Project Final"
+subtitle: "INFO 526 - Spring 2024 - Final Project"
 author:
  - name: "**Data Dazzlers**: <br> Sanja Dmitrovic, Jiayue He, Vidhyananth Sivashanmugam,<br> Naitik Shah, Varun Soni, Mohammad Ali Farmani" 
 title-slide-attributes:
@@ -148,7 +148,7 @@ data("penguins")
 ::: incremental
 -   The primary goal of the project is to develop a **user-friendly, visualization tool** that provides detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
 
--   We use the **GIS Data from the City of Tucson**, which contains publicly-available records of vehicle collisions from the Tucson Police Department covering the period from March 2022 to the present.
+-   We use the **GIS Data from the City of Tucson**, which contains publicly-available records of vehicle collisions from the Tucson Police Department covering the period from year 2018 to 2023.
 
 -   Examples of key variables in this data set are:
 
