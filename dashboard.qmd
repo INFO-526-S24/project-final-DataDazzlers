@@ -312,7 +312,7 @@ cars_data |>
 ```
 
 ```{r}
-#| title: Overspeed
+#| title: Speeding
 
 # trend line chart for over-speed violation collisions
 cars_data |>
@@ -334,7 +334,7 @@ cars_data |>
   # line chart for over-speed
   hchart("line", 
          hcaes(x = year, y = count, group = metric)) |>
-  hc_title(text = "Yearly Overspeed Collisions Trends",  align = "center") |>
+  hc_title(text = "Yearly Speeding Collisions Trends",  align = "center") |>
   hc_xAxis(title = list(text = "Year"), labels = list(rotation = 0)) |>
   hc_yAxis(title = list(text = "Total Count")) |>
   # adjust legend properties   
@@ -456,7 +456,7 @@ cars_data |>
 ```{r}
 #| title: Injuries
 
-# summarized bar plot for injuries by offence type
+# summarized bar plot for injuries by offense type
 cars_data |>
   # summarized data 
   group_by(offense_type) |>
@@ -485,7 +485,7 @@ cars_data |>
 ```{r}
 #| title: Fatalities
 
-# summarized bar plot for injuries by offence type
+# summarized bar plot for injuries by offense type
 cars_data |>
   # summarized data 
   group_by(offense_type) |>
@@ -667,7 +667,7 @@ cars_data |>
   # vertical column chart
   hchart("column", 
          hcaes(x = injury_severity, y = percentage)) |>
-  hc_title(text = "Collisions By Injuriy Severity", align = "center") |>
+  hc_title(text = "Collisions By Injury Severity", align = "center") |>
   hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
   hc_xAxis(title = NULL, labels = list(enabled = TRUE)) |>
   # customize data labels using JS formatted
@@ -680,7 +680,7 @@ cars_data |>
 ```
 
 ```{r}
-#| title: Offence Type
+#| title: Offense Type
 
 # summarized bar plot for injuries by offense type
 cars_data |>
@@ -949,7 +949,7 @@ cars_data |>
 
 ```
 
-# Collision Occarance
+# Collision Occurrence
 
 ## Row {width="0%"}
 
@@ -1302,7 +1302,7 @@ cars_data |>
   hchart("column", 
          hcaes(x = injury_severity, y = percentage)) |>
   hc_chart(inverted = TRUE) |> # invert for horizontal
-  hc_title(text = "Collisions By Injuriy Severity", align = "center") |>
+  hc_title(text = "Collisions By Injury Severity", align = "center") |>
   hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
   hc_xAxis(title = NULL, labels = list(enabled = TRUE)) |>
   # customize data labels using JS formatted

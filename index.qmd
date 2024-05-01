@@ -61,15 +61,15 @@ knitr::opts_chunk$set(
 
 ## Abstract
 
-In this project, we look into the Tucson accident crash dataset. We aim to offer detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. So as to help various stakeholders, such as city planners, policy-makers, local residents, and fellow students, to improve road safety.
+In this project, we look into the **car accident data from the city of Tucson's police department**, which provides substantial data on car accidents from 2018 - 2023. We aim to offer detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. The goal is to help various stakeholders such as city planners, policy-makers, local residents, and fellow students improve road safety.
 
 ## **Introduction**
 
 In response to the critical issue of road safety in Tucson and as students at the University of Arizona, located in the heart of Tucson, we propose to develop a dynamic and user-friendly dashboard that offers detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. We aspire to contribute to informed decision-making processes and the implementation of effective road safety measures.
 
-Analyzing traffic collision data within the city not only allows us to apply the theoretical knowledge we've gained in our data analysis courses but also provides insights into urban safety and transportation issues that affect peers and fellow residents. This project is not just an academic exercise; it's a chance to contribute to a safer, more informed Tucson.
+Analyzing traffic collision data within the city not only allows us to apply the theoretical knowledge we've gained in our data analysis courses. but also provides insights into urban safety and transportation issues that affect peers and fellow residents. This project is not just an academic exercise; it's a chance to contribute to a safer, more informed Tucson.
 
-The project utilizes the comprehensive accident crash data set provided by the Tucson Police Department, [GIS Data from the City of Tucson](https://gisdata.tucsonaz.gov/datasets/tucson-police-collisions/explore "Dataset link"), which displays Tucson Police's publicly-available records of vehicle collisions from March 2022 to the present. Variables in this dataset include date of collision, injury severity, manner of collision, if the collision was fatal, etc. A full list of these variables is provided below.
+The project utilizes the comprehensive accident crash data set provided by the Tucson Police Department, [GIS Data from the City of Tucson](https://gisdata.tucsonaz.gov/datasets/tucson-police-collisions/explore "Dataset link"), which displays Tucson Police's publicly-available records of vehicle collisions from 2018 to the present. Example variables in this data set include date of collision, injury severity, manner of collision, if the collision was fatal, etc. A full list of these variables is provided below.
 
 ```{r}
 #| label: load-data
@@ -158,7 +158,7 @@ cars_data <- read.csv("data/tucson_data.csv") |>
 
 ## **Overall Project Plan**
 
-In the progress of finishing the project, we follows steps including:
+For this project, we follow these four steps to create a user-friendly, interactive Quarto dashboard:
 
 1.  Data Preparation and Analysis
 
@@ -179,7 +179,53 @@ Specially, we focused on two main questions:
 
 Does day of the week and/or time of day affect severity and the number of accidents?
 
-Approach: We use a heat map to see at which times there are more accidents happens in a day. We use a line plot to review the monthly accident condition in different years.
+Approach: We use time series and heat map plots to see which months, days, and times accidents occur more frequently.
+
+First, a monthly time series categorized by year is created to see monthly and yearly trends in accident frequency.
+
+```{r}
+#| title: Car Collisions Over Time
+
+# month and year wise trends for car collisions 
+# summarize month data by year
+month_summary <- cars_data |>
+  filter(!year %in% c(2017,2024)) |>
+  group_by(year, month, month_no) |>
+  summarise(accidents = n(), .groups = "drop") |>
+  pivot_wider(
+    names_from = year,
+    values_from = accidents
+  ) |>
+  mutate(month = as.character(month)) |>
+  arrange(month_no) |>
+  select(-month_no) # drop month_no after sorting
+
+# Create the highchart object
+month_chart <- highchart() |>
+  hc_chart(type = "line") |>
+  hc_title(text="<b>
+                  <span style='font-family: Arial; font-size: 15px;'> Collisions Monthly Trends by Year</span>
+                </b>", align="center") |>
+  hc_xAxis(categories = month_summary$month) |>
+  hc_yAxis(title = list(text = "Collisions"))
+
+# Add series for each year
+for (i in 2:ncol(month_summary)) {  # from the second column
+  month_chart <- month_chart |> hc_add_series(
+    name = names(month_summary)[i],  # column name as the series name
+    data = month_summary[[i]],  # column data as series data
+    dashStyle = "Dash"  # Set the line style to dashed
+  )
+}
+
+# print the chart
+month_chart
+
+```
+
+Analysis: We find that 2019 is the year with the highest frequency of car accidents and 2020 is the year with the lowest frequency of car accidents. The decrease in accidents in 2020 is most likely due to COVID (April 2020 was first shutdown month), where fewer people were commuting in general. Also, there is a lower amount of accidents between May and August compared to the other months. This could be attributed to not as many people commuting to school since these months are considered summer break. We see more accidents occurring in October and April, which could be due to holidays such as Halloween and Spring Break.
+
+Then, an hourly heat map categorized by day is plotted to observe peak times and days for accidents.
 
 ```{r}
 #| title: Collision by Day and Hour
@@ -222,55 +268,47 @@ highchart() |>
   )
 ```
 
-Analysis: Based on the plot, we found that during the week, time period from 13:30 to 18:30 more accident happens, one possible reason is that between this period of time, many parents would go out to pick up their children between 13:30 - 16:30. And during the period of 16:30 - 18:30 is the peak hour of people get off from the work. The second time period of more accident happens is between 6:30 to 8:30 which is also the peak hour when people go to the work. Therefore, drivers should be more careful during the peak hours, or if possible, people can also avoid getting out during the peak hours.
-
-```{r}
-#| title: Car Collisions Over Time
-
-# Convert month column to character to prevent highcharter from treating it as a timestamp
-month_summary <- cars_data |>
-  filter(!year %in% c(2017,2024)) |>
-  group_by(year, month, month_no) |>
-  summarise(accidents = n(), .groups = "drop") |>
-  pivot_wider(
-    names_from = year,
-    values_from = accidents
-  ) |>
-  mutate(month = as.character(month)) |>
-  arrange(month_no) |>
-  select(-month_no)
-
-# Create the highchart object
-month_chart <- highchart() |>
-  hc_chart(type = "line") |>
-  hc_xAxis(categories = month_summary$month) |>
-  hc_yAxis(title = list(text = "Collisions"))
-
-# Add series for each year
-for (i in 2:ncol(month_summary)) {  # Start from the second column, assuming the first column is `month`
-  month_chart <- month_chart |> hc_add_series(
-    name = names(month_summary)[i],  # Use the column name as the series name
-    data = month_summary[[i]],  # Use the column data as series data
-    dashStyle = "Dash"  # Set the line style to dashed
-  )
-}
-
-# Print the chart
-month_chart
-
-```
-
-Analysis: Based on the line plot, we noticed that on average, Jun and July have comparatively lowest accident rate, while more accidents happen in Oct and Apr. Probably it is because of the holiday as Halloween and Spring Break of some Universities. We also noticed that in 2020, Apr had the lowest accident rate, we conclude it is due to that Apr 2020 was the first "shutdown" month during COVID-19 in the USA.
+Analysis: Based on the plot, we found that during the week, time period from 13:30 to 18:30 more accident happens, one possible reason is that between this period of time, many parents would go out to pick up their children between 13:30 - 16:30. And during the period of 16:30 - 18:30 is the peak hour of people get off from the work. The second time period of more accident happens is between 6:30 to 8:30 which is also the peak hour when people go to the work. Therefore, drivers should be more careful during the peak hours, or if possible, people can also avoid getting out during the peak hours. We also see that fewer accidents occur in general over the weekend, so more caution must be taken on weekdays.
 
 ### Question 2
 
 What is the relationship between the type of violation (e.g., failure to yield, aggressive driving) and if the accident resulted in a fatality?
 
-Approach: We use a heat map to see the relationship between the type of violation and the resulted injure including the fatality injury.
+Approach: We use a heat maps and bar plots to see the relationship between the type of violation and the resulted injury, including if the injury was fatal. First, the total number of injuries per injury type is shown in a bar plot.
+
+```{r}
+#| title: Injury Severity
+
+# summarized bar plot for collisions for injury severity
+cars_data |>
+  # summarized data 
+  group_by(injury_severity) |>
+  summarise(total_count = n(), .groups = "drop") |>
+  mutate(percentage = (total_count / sum(total_count)) * 100) |>
+  arrange(desc(percentage)) |>
+  # vertical column chart
+  hchart("column", 
+         hcaes(x = injury_severity, y = percentage)) |>
+  hc_chart(inverted = TRUE) |> # invert for horizontal
+  hc_title(text = "Collisions By Injuriy Severity", align = "center") |>
+  hc_tooltip(pointFormat = "{series.name}: <b>{point.y:.1f}%</b>") |>
+  hc_xAxis(title = NULL, labels = list(enabled = TRUE)) |>
+  # customize data labels using JS formatted
+  hc_plotOptions(column = list(dataLabels = list(enabled = TRUE, 
+                                                 format = '{point.y:.1f}%'),
+                               color = "#3498db")) |>
+  hc_add_theme(hc_theme_smpl()) |>
+  hc_legend(enabled = FALSE) # disable legends
+
+```
+
+Analysis: We see that 50.2% of drivers do not get injured from an accident, but 49.8% do. The most common injury type is non-incapacitating injury followed by possible injury. It is also seen that 1.6% of accidents do result in a fatal injury.
+
+Then, a heat map is plotted to observe the cause of injury severity to see which types of accidents lead to which types of injuries.
 
 ```{r}
 
-#| title: Collision Type and Injury Serverity
+#| title: Collision Type and Injury Severity
 
 # Define colors for the heatmap
 colors <- c("#FFFFFF", "#3070B3", "#FFA07A", "#FF4500")
@@ -316,7 +354,9 @@ highchart() |>
 
 ```
 
-Analysis: Based on the plot, we found that the manner: Left Turn caused the most accidents including the highest fatal injury. Usually left turn is allowed during the green light which also allows straight car across, so many people who turned left might neglect the coming cars. It suggested that when drivers turn left, they should be more careful.
+Analysis: Based on the plot, we found that left turns caused the most accidents including the highest fatal injury. Usually, left turn is allowed during the green light which also allows straight cars to cross, so many people who turned left might neglect the coming cars. It suggested that when drivers turn left, they should be more careful.
+
+Then, another bar plot is created to look at the amount of fatalities by violation type.
 
 ```{r}
 #| title: Violations Types vs Fatalities
@@ -349,8 +389,148 @@ cars_data |>
   hc_legend(enabled = FALSE)
 ```
 
-Analysis: Based on the plot, we found that violations of speed , crosswalk , failure to yield have higher fatalities.
+Analysis: Based on the plot, we found that violations occurring due to speed , crosswalk , and failure to yield have higher fatalities.
+
+Finally, various pie charts are plotted to see the percentage of accidents occurring per violation/operator type such as the accident occurring at an intersection or if the driver was speeding, distracted, or impaired.
+
+```{r}
+#| title: Intersection Related
+
+# donuts chart for intersection related collisions
+highchart() |>
+  hc_chart(type = "pie", 
+           plotBackgroundColor = NULL,
+           plotBorderWidth = NULL, 
+           plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  # adjust pie for donuts
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
+  hc_colors(c("#3498db", "#e74c3c")) |> 
+  hc_legend(enabled = FALSE) |> # disable legends
+  hc_add_theme(hc_theme_smpl()) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        # summarized data
+        group_by(intersection_related) |>
+        summarise(total_accidents = n(), .groups = "drop") 
+    )
+  )
+
+```
+
+```{r}
+#| title: Speeding Driver-Involved
+
+# donuts chart for speeding driver involved collisions
+highchart() |>
+  hc_chart(type = "pie", 
+           plotBackgroundColor = NULL,
+           plotBorderWidth = NULL, 
+           plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  # adjust pie for donuts
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
+  hc_colors(c("#3498db", "#e74c3c")) |> 
+  hc_legend(enabled = FALSE) |> # disable legends
+  hc_add_theme(hc_theme_smpl()) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        # summarized data
+        group_by(violation_speed) |>
+        summarise(total_accidents = n(), .groups = "drop") 
+    )
+  )
+
+```
+
+```{r}
+#| title: Distracted Driver-Involved
+
+# donuts chart for distracted driver involved collisions
+highchart() |>
+  hc_chart(type = "pie", 
+           plotBackgroundColor = NULL,
+           plotBorderWidth = NULL, 
+           plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  # adjust pie for donuts
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
+  hc_colors(c("#3498db", "#e74c3c")) |> 
+  hc_legend(enabled = FALSE) |> # disable legends
+  hc_add_theme(hc_theme_smpl()) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        # summarize data
+        group_by(operator_distracted) |>
+        summarise(total_accidents = n(), .groups = "drop") 
+    )
+  )
+
+```
+
+```{r}
+#| title: Impaired Driver-Involved
+
+# donuts chart for impaired driver involved collisions
+highchart() |>
+  hc_chart(type = "pie", 
+           plotBackgroundColor = NULL,
+           plotBorderWidth = NULL, 
+           plotShadow = FALSE) |>
+  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
+  # adjust pie for donuts
+  hc_plotOptions(pie = list(pointPadding = 0.04,
+                            groupPadding = 0.04,
+                            innerSize = '50%',  # Creates the donuts hole
+                            startAngle = 0,
+                            endAngle = 360,
+                            dataLabels = list(enabled = TRUE, 
+                                              format = '{point.name}: {point.percentage:.1f}%')
+                          )) |>
+  hc_colors(c("#3498db", "#e74c3c")) |> 
+  hc_legend(enabled = FALSE) |> # disable legends
+  hc_add_theme(hc_theme_smpl()) |>
+  hc_add_series(
+    name = "Total",
+    data = list_parse2(
+       cars_data |>
+        # summarized data
+        group_by(operator_impaired) |>
+        summarise(total_accidents = n(), .groups = "drop") 
+    )
+  )
+
+```
+
+Analysis: From these various pie charts, we see that 74.7% of accidents occur at an intersection, 18.5% due to the driver speeding, 38.1% due to the driver being distracted, and 6.9% due to the driving being impaired. Based on these results, we recommend that drivers take particular caution at intersections. It might also be beneficial to enforce stricter regulations on distractions such as being on the phone.
 
 ## **Conclusion**
 
-With a deep commitment to applying our analytical skills for the betterment of our community, we believe that this project represents a meaningful opportunity to make a tangible difference in the area of road safety in Tucson. We are excited about the potential of our interactive spatiotemporal visualization tool to illuminate insights that can lead to positive changes in our community.
+We demonstrate a successfully-designed Quarto dashboard that allows the user to see a substantial amount of statistics related to car accidents in Tucson. With a deep commitment to applying our analytical skills for the betterment of our community, we believe that this project represents a meaningful opportunity to make a tangible difference in the area of road safety in Tucson. We are excited about the potential of our interactive spatiotemporal visualization tool to inform Tucson drivers on best driving practices that can lead to positive changes in our community.
