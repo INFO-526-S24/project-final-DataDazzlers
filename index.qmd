@@ -61,15 +61,15 @@ knitr::opts_chunk$set(
 
 ## Abstract
 
-In this project, we look into the **car accident data from the city of Tucson's police department**, which provides substantial data on car accidents from 2018 - 2023. We aim to offer detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. The goal is to help various stakeholders such as city planners, policy-makers, local residents, and fellow students improve road safety.
+In this project, we look into car accident data from the city of Tucson's police department, which provides substantial data on car accidents from 2018 - 2023. We aim to offer detailed insights into these car accident data by developing an interactive, user-friendly Quarto dashboard. This dashboard will allow users to access statistics related to the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. The goal is to help various stakeholders such as city planners, policy-makers, local residents, and fellow students think of measures to improve road safety.
 
 ## **Introduction**
 
-In response to the critical issue of road safety in Tucson and as students at the University of Arizona, located in the heart of Tucson, we propose to develop a dynamic and user-friendly dashboard that offers detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. We aspire to contribute to informed decision-making processes and the implementation of effective road safety measures.
+In response to the critical issue of road safety in Tucson and as students at the University of Arizona, located in the heart of Tucson, **we propose to develop a dynamic and user-friendly Quarto dashboard** that offers detailed insights into the frequency, severity, and causes of traffic accidents across different times and locations in Tucson. We aspire to contribute to informed decision-making processes and the implementation of effective road safety measures.
 
-Analyzing traffic collision data within the city not only allows us to apply the theoretical knowledge we've gained in our data analysis courses. but also provides insights into urban safety and transportation issues that affect peers and fellow residents. This project is not just an academic exercise; it's a chance to contribute to a safer, more informed Tucson.
+Analyzing traffic collision data within the city not only allows us to apply the theoretical knowledge we've gained in our data analysis courses, but we can also provide insights into urban safety and transportation issues that affect peers and fellow residents. This project is not just an academic exercise; it's a chance to contribute to a safer, more informed Tucson.
 
-The project utilizes the comprehensive accident crash data set provided by the Tucson Police Department, [GIS Data from the City of Tucson](https://gisdata.tucsonaz.gov/datasets/tucson-police-collisions/explore "Dataset link"), which displays Tucson Police's publicly-available records of vehicle collisions from 2018 to the present. Example variables in this data set include date of collision, injury severity, manner of collision, if the collision was fatal, etc. A full list of these variables is provided below.
+The project utilizes the comprehensive accident crash data set provided by the Tucson Police Department, [GIS Data from the City of Tucson](https://gisdata.tucsonaz.gov/datasets/tucson-police-collisions/explore "Dataset link"), which displays Tucson Police's publicly-available records of vehicle collisions from 2018 to 2023. Example variables in this data set include date of collision, injury severity, manner of collision, if the collision was fatal, etc. A full list of these variables is provided below.
 
 ```{r}
 #| label: load-data
@@ -393,143 +393,9 @@ Analysis: Based on the plot, we found that violations occurring due to speed , c
 
 Finally, various pie charts are plotted to see the percentage of accidents occurring per violation/operator type such as the accident occurring at an intersection or if the driver was speeding, distracted, or impaired.
 
-```{r}
-#| title: Intersection Related
+![](images/question_2_part_2.PNG){fig-align="center"}
 
-# donuts chart for intersection related collisions
-highchart() |>
-  hc_chart(type = "pie", 
-           plotBackgroundColor = NULL,
-           plotBorderWidth = NULL, 
-           plotShadow = FALSE) |>
-  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
-  # adjust pie for donuts
-  hc_plotOptions(pie = list(pointPadding = 0.04,
-                            groupPadding = 0.04,
-                            innerSize = '50%',  # Creates the donuts hole
-                            startAngle = 0,
-                            endAngle = 360,
-                            dataLabels = list(enabled = TRUE, 
-                                              format = '{point.name}: {point.percentage:.1f}%')
-                          )) |>
-  hc_colors(c("#3498db", "#e74c3c")) |> 
-  hc_legend(enabled = FALSE) |> # disable legends
-  hc_add_theme(hc_theme_smpl()) |>
-  hc_add_series(
-    name = "Total",
-    data = list_parse2(
-       cars_data |>
-        # summarized data
-        group_by(intersection_related) |>
-        summarise(total_accidents = n(), .groups = "drop") 
-    )
-  )
-
-```
-
-```{r}
-#| title: Speeding Driver-Involved
-
-# donuts chart for speeding driver involved collisions
-highchart() |>
-  hc_chart(type = "pie", 
-           plotBackgroundColor = NULL,
-           plotBorderWidth = NULL, 
-           plotShadow = FALSE) |>
-  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
-  # adjust pie for donuts
-  hc_plotOptions(pie = list(pointPadding = 0.04,
-                            groupPadding = 0.04,
-                            innerSize = '50%',  # Creates the donuts hole
-                            startAngle = 0,
-                            endAngle = 360,
-                            dataLabels = list(enabled = TRUE, 
-                                              format = '{point.name}: {point.percentage:.1f}%')
-                          )) |>
-  hc_colors(c("#3498db", "#e74c3c")) |> 
-  hc_legend(enabled = FALSE) |> # disable legends
-  hc_add_theme(hc_theme_smpl()) |>
-  hc_add_series(
-    name = "Total",
-    data = list_parse2(
-       cars_data |>
-        # summarized data
-        group_by(violation_speed) |>
-        summarise(total_accidents = n(), .groups = "drop") 
-    )
-  )
-
-```
-
-```{r}
-#| title: Distracted Driver-Involved
-
-# donuts chart for distracted driver involved collisions
-highchart() |>
-  hc_chart(type = "pie", 
-           plotBackgroundColor = NULL,
-           plotBorderWidth = NULL, 
-           plotShadow = FALSE) |>
-  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
-  # adjust pie for donuts
-  hc_plotOptions(pie = list(pointPadding = 0.04,
-                            groupPadding = 0.04,
-                            innerSize = '50%',  # Creates the donuts hole
-                            startAngle = 0,
-                            endAngle = 360,
-                            dataLabels = list(enabled = TRUE, 
-                                              format = '{point.name}: {point.percentage:.1f}%')
-                          )) |>
-  hc_colors(c("#3498db", "#e74c3c")) |> 
-  hc_legend(enabled = FALSE) |> # disable legends
-  hc_add_theme(hc_theme_smpl()) |>
-  hc_add_series(
-    name = "Total",
-    data = list_parse2(
-       cars_data |>
-        # summarize data
-        group_by(operator_distracted) |>
-        summarise(total_accidents = n(), .groups = "drop") 
-    )
-  )
-
-```
-
-```{r}
-#| title: Impaired Driver-Involved
-
-# donuts chart for impaired driver involved collisions
-highchart() |>
-  hc_chart(type = "pie", 
-           plotBackgroundColor = NULL,
-           plotBorderWidth = NULL, 
-           plotShadow = FALSE) |>
-  hc_tooltip(pointFormat = '{point.name}: <b>{point.percentage:.1f}%</b>') |>
-  # adjust pie for donuts
-  hc_plotOptions(pie = list(pointPadding = 0.04,
-                            groupPadding = 0.04,
-                            innerSize = '50%',  # Creates the donuts hole
-                            startAngle = 0,
-                            endAngle = 360,
-                            dataLabels = list(enabled = TRUE, 
-                                              format = '{point.name}: {point.percentage:.1f}%')
-                          )) |>
-  hc_colors(c("#3498db", "#e74c3c")) |> 
-  hc_legend(enabled = FALSE) |> # disable legends
-  hc_add_theme(hc_theme_smpl()) |>
-  hc_add_series(
-    name = "Total",
-    data = list_parse2(
-       cars_data |>
-        # summarized data
-        group_by(operator_impaired) |>
-        summarise(total_accidents = n(), .groups = "drop") 
-    )
-  )
-
-```
-
-Analysis: From these various pie charts, we see that 74.7% of accidents occur at an intersection, 18.5% due to the driver speeding, 38.1% due to the driver being distracted, and 6.9% due to the driving being impaired. Based on these results, we recommend that drivers take particular caution at intersections. It might also be beneficial to enforce stricter regulations on distractions such as being on the phone.
+Analysis: From these various pie charts, we see that 74.7% of accidents occur at an intersection, 18.5% due to the driver speeding, 6.9% due to the driving being impaired, and 38.1% due to the driver being distracted. Based on these results, we recommend that drivers take particular caution at intersections. It might also be beneficial to enforce stricter regulations on distractions such as being on the phone.
 
 ## **Conclusion**
 
