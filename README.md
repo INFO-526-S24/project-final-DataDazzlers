@@ -4,7 +4,7 @@ Final project repo for INFO 526 - Spring 2024.
 
 INTRODUCTION:
 
-The primary goal of the project is to develop a user-friendly, interactive dashboard that provides the user detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
+The focus of this project is to develop a user-friendly, interactive dashboard that provides the user detailed insights into the frequency, severity, and causes of traffic accidents in Tucson.
 
 DATA SET:
 
