@@ -227,6 +227,20 @@ data("penguins")
 
 ![](images/question_2_part_2.PNG){fig-align="center"}
 
+## Challenges {.smaller}
+
+Interventions or policies implemented based on the analysis may have unintended consequences or lead to unforeseen challenges. Anticipating and mitigating these risks requires careful planning, stakeholder engagement, and flexibility to adapt to changing circumstances.
+
+Real-life applications may face challenges related to the availability and quality of data. Not all cities may have publicly available datasets on traffic accidents, and even if they do, the data may be incomplete, inconsistent, or outdated. This can limit the usefulness of the analysis and its applicability to other locations.
+
+## Limitations {.smaller}
+
+The scale and resolution of the visualizations may not always be optimal for conveying meaningful insights. For example, maps with too much detail may overwhelm the viewer, while maps with insufficient detail may fail to capture important geographic features or variations.
+
+Similarly, when visualizing temporal trends in accidents (e.g., by day of week or time of day), the choice of temporal aggregation (e.g., hourly, daily, monthly) can influence the perceived patterns and trends.
+
+Aggregating data over longer time periods may smooth out fluctuations but could also mask important variations at finer temporal resolutions.
+
 ## Conclusion {.smaller}
 
 Identification of High-Risk Areas: The dashboard effectively pinpoints traffic violation hotspots, aiding in route planning and increasing awareness of dangerous zones.
